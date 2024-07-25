@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='req.mng.dnld'>
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* req.mng.dnld.getList */
+		SELECT 
+			A.idx 
+			,A.reg_user_id
+			,USR.name reg_user_name
+			,A.req_sts
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'APRVCD' AND code_id = A.req_sts) req_sts_nm
+			,A.cmnt
+			,A.reg_dt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd hh24:mi') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd hh24:mi') updt_dt_char
+			,A.table_eng_nm
+			,(SELECT count(*) FROM kcgbd.t_download_req_dtl WHERE download_req_idx = A.idx)  req_col_cnt
+			,(SELECT count(*) FROM kcgbd.t_rule_meta_0003 RM3 WHERE RM3.db_table_id = A.db_table_id) tot_col_cnt
+			,(
+				SELECT 
+					BR3.accumulated_records 
+				FROM 
+					kcgbd.t_batch_result_0003 BR3
+					,(
+				        SELECT planned_dt FROM kcgbd.t_batch_date_0001
+				        WHERE flag = 0
+				        ORDER BY planned_dt DESC
+				        LIMIT 1
+				      ) D
+				WHERE 1=1
+					AND BR3.planned_dt = D.planned_dt
+					AND BR3.cnnc_manage_no = RM2.cnnc_manage_no
+					AND BR3.table_eng_nm = RM2.table_eng_nm
+			) accumulated_records
+			,RM1.sys_nm
+			,(
+				SELECT planned_dt FROM kcgbd.t_batch_date_0001
+		        WHERE flag = 0
+		        ORDER BY planned_dt DESC
+		        LIMIT 1
+			) planned_dt			
+		FROM
+			kcgbd.t_download_req A
+			,kcgbd.t_rule_meta_0002 RM2
+			,kcgbd.t_rule_meta_0001 RM1
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND A.db_table_id = RM2.db_table_id 
+			AND RM1.cnnc_manage_no = RM2.cnnc_manage_no 
+			AND USR.user_id = A.reg_user_id
+		<if test='search_val != ""'>
+			<if test='search_nm == "sys_nm"'>
+				AND RM1.sys_nm like concat('%',#{search_val},'%')
+			</if>
+			<if test='search_nm == "reg_user_name"'>
+				AND USR.name like concat('%',#{search_val},'%')
+			</if>		
+		</if>
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* req.mng.dnld.getInfo */
+		SELECT 
+			A.idx 
+			,RM1.sys_nm
+			,RM1.db_ty_nm 
+			,RM2.table_eng_nm 
+			,RM2.table_korean_nm 
+			,RM2.table_dc 
+			,RM2.where_info_nm
+			,RM2.hashtag_cn 
+			,RM2.mngr_nm 
+			,RM2.hive_table_nm 
+			,RM2.bigdata_gtrn_at 
+			,RM2.schdul_applc_at 
+			,RM2.gthnldn_mth_code 
+			,RM2.gthnldn_mth_nm 
+			,A.reg_user_id
+			,USR.name reg_user_name
+			,A.req_sts
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'APRVCD' AND code_id = A.req_sts) req_sts_nm
+			,A.cmnt
+			,A.reg_dt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd hh24:mi') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd hh24:mi') updt_dt_char
+			,A.table_eng_nm
+			,(SELECT count(*) FROM kcgbd.t_download_req_dtl WHERE download_req_idx = A.idx)  req_col_cnt
+			,(SELECT count(*) FROM kcgbd.t_rule_meta_0003 RM3 WHERE RM3.db_table_id = A.db_table_id) tot_col_cnt
+			,(
+				SELECT 
+					BR3.accumulated_records 
+				FROM 
+					kcgbd.t_batch_result_0003 BR3
+					,(
+				        SELECT planned_dt FROM kcgbd.t_batch_date_0001
+				        WHERE flag = 0
+				        ORDER BY planned_dt DESC
+				        LIMIT 1
+				      ) D
+				WHERE 1=1
+					AND BR3.planned_dt = D.planned_dt
+					AND BR3.cnnc_manage_no = RM2.cnnc_manage_no
+					AND BR3.table_eng_nm = RM2.table_eng_nm
+			) accumulated_records
+			,(
+				SELECT planned_dt FROM kcgbd.t_batch_date_0001
+		        WHERE flag = 0
+		        ORDER BY planned_dt DESC
+		        LIMIT 1
+			) planned_dt
+		FROM
+			kcgbd.t_download_req A
+			,kcgbd.t_rule_meta_0002 RM2
+			,kcgbd.t_rule_meta_0001 RM1
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND A.db_table_id = RM2.db_table_id 
+			AND RM1.cnnc_manage_no = RM2.cnnc_manage_no 
+			AND USR.user_id = A.reg_user_id
+			AND A.idx = #{idx}
+	</select>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* req.mng.dnld.updateInfo */
+		UPDATE 
+			kcgbd.t_download_req 
+		SET
+			req_sts = #{req_sts}
+			,cmnt = #{cmnt}
+			,updt_user_id = #{user_id}
+			,updt_dt = now()
+		WHERE 1=1
+			AND idx = #{idx}
+	</update>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	/* req.mng.dnld.deleteInfo */
+		DELETE FROM kcgbd.t_download_req
+		WHERE idx = #{idx}
+	</delete>
+	
+	<update id="updtStatus" parameterType="cmmnMap">
+	/* req.mng.dnld.updtStatus */
+		UPDATE 
+			kcgbd.t_download_req 
+		SET
+			req_sts = #{req_sts}
+			,updt_user_id = #{user_id}
+			,updt_dt = now()
+		WHERE 1=1
+			AND idx = #{idx}
+	</update>
+	
+	<select id="getReqDataInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* req.mng.dnld.getReqDataInfo */
+		SELECT 
+			A.download_req_idx
+			,A.db_table_atrb_sn
+			,A.db_table_id
+			,B.table_eng_nm 
+			,B.table_atrb_eng_nm 
+			,B.table_korean_atrb_nm 
+			,B.dstng_trget_at 
+			,B.table_atrb_ty_nm
+			,B.table_atrb_lt_value 
+			,B.hive_col_nm 
+			,B.hive_atrb_ty_nm 
+			,B.table_atrb_null_posbl_at 
+			,B.table_atrb_pk_at 
+		FROM 
+			kcgbd.t_download_req_dtl A
+			,kcgbd.t_rule_meta_0003 B
+		WHERE 1=1
+			AND A.db_table_id  = B.db_table_id 
+			AND A.db_table_atrb_sn  = CAST(B.db_table_atrb_sn as TEXT)
+			AND A.download_req_idx = #{download_req_idx}
+	</select>
+</mapper>

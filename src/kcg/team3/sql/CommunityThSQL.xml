@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kcg.team3">
+
+	<select id="getCommunityList" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getCommunityList */
+		SELECT user_id, name,
+		email, pic_mbl_telno, dept, jikgub_nm
+		FROM kcgbd.t_user
+		WHERE
+		status_cd = 'AAA'
+		ORDER BY name;
+	</select>
+
+	<select id="getCommuListWithPaging" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getCommuListWithPaging */
+		SELECT user_id, name,
+		email, pic_mbl_telno, dept, jikgub_nm
+		FROM kcgbd.t_user
+		WHERE status_cd = 'AAA'
+		<if test="dept != null and dept != ''">
+            AND dept = #{dept}
+         </if>
+		ORDER BY name
+		LIMIT #{pageSize} OFFSET #{offset};
+	</select>
+
+	<!-- 필터링된 데이터의 총 개수 가져오기 -->
+	<select id="getFilteredCommuCount" parameterType="cmmnMap" resultType="int">
+   /* kcg.team3.getFilteredCommuCount */
+      SELECT COUNT(*)
+      FROM kcgbd.t_user
+      WHERE status_cd = 'AAA'
+         <if test="dept != null and dept != ''">
+            AND dept = #{dept}
+         </if>
+   </select>
+
+</mapper>

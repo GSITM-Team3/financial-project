@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.cust_mng'>
+
+   <select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getList */
+       select
+            B.CUST_NM             as CUST_NM 
+           ,SUBSTRING(B.RRNO,1,6) as RRNO
+           ,B.CUST_MBL_TELNO      as CUST_MBL_TELNO
+           ,D.PIC_NM              as PIC_NM
+           ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '133' AND CODE_NO = A.CUST_EVT_TY_CD) as CUST_EVT_TY_CD_NM
+           ,A.AVDAY_YMD           as AVDAY_YMD
+        from kcgbd.TB_CUSTEVENT  A
+            ,kcgbd.TB_CUSTMST    B
+            ,kcgbd.TB_CUSTPICREL C
+            ,kcgbd.TB_PICMST     D
+        WHERE 1=1
+          and A.CUST_MBL_TELNO = B.CUST_MBL_TELNO
+          and B.CUST_MBL_TELNO = C.CUST_MBL_TELNO
+          and C.PIC_MBL_TELNO  = D.PIC_MBL_TELNO
+          and B.CURR_STCD      = '0'
+          and C.CURR_STCD      = '0'
+          and D.CURR_STCD      = '0'
+        <if test='cust_evt_ty_cd != ""'>
+         AND A.CUST_EVT_TY_CD = #{cust_evt_ty_cd}
+       </if>
+       <if test='dept_nm != ""'>
+         AND D.DEPT_NM = #{dept_nm}
+       </if>
+       <if test='cust_nm != ""'>
+            and B.CUST_NM = #{cust_nm}
+        </if>
+        <if test='wrt_dt != ""'>
+             and TO_CHAR(A.WRT_DT,'YYYYMMDD') = #{wrt_dt}
+        </if>
+   </select>
+   
+   <select id="getListAll" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getListAll */
+       select
+            B.CUST_NM             as CUST_NM 
+           ,SUBSTRING(B.RRNO,1,6) as RRNO
+           ,B.CUST_MBL_TELNO      as CUST_MBL_TELNO
+           ,D.PIC_NM              as PIC_NM
+           ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '133' AND CODE_NO = A.CUST_EVT_TY_CD) as CUST_EVT_TY_CD_NM
+           ,A.AVDAY_YMD           as AVDAY_YMD
+        from kcgbd.TB_CUSTEVENT  A
+            ,kcgbd.TB_CUSTMST    B
+            ,kcgbd.TB_CUSTPICREL C
+            ,kcgbd.TB_PICMST     D
+        WHERE 1=1
+          and A.CUST_MBL_TELNO = B.CUST_MBL_TELNO
+          and B.CUST_MBL_TELNO = C.CUST_MBL_TELNO
+          and C.PIC_MBL_TELNO  = D.PIC_MBL_TELNO
+          and B.CURR_STCD      = '0'
+          and C.CURR_STCD      = '0'
+          and D.CURR_STCD      = '0'
+   </select>
+   
+   <select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getInfo */
+      SELECT A.CUST_NM                  as CUST_NM
+           ,A.RRNO                        as RRNO
+           ,A.CUST_MBL_TELNO              as CUST_MBL_TELNO
+           ,A.CO_TELNO                    as CO_TELNO
+           ,A.CUST_EML_ADDR               as CUST_EML_ADDR
+           ,A.OCCP_TY_CD_NM               as OCCP_TY_CD_NM
+           ,A.CUST_ADDR                   as CUST_ADDR
+           ,A.WRT_DT                      as WRT_DT
+           ,A.TSK_DTL_CN                  as TSK_DTL_CN
+        FROM (
+      SELECT
+         A.CUST_NM                     as CUST_NM
+           ,A.RRNO                        as RRNO
+           ,A.CUST_MBL_TELNO              as CUST_MBL_TELNO
+           ,A.CO_TELNO                    as CO_TELNO
+           ,A.CUST_EML_ADDR               as CUST_EML_ADDR
+           ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '140' AND CODE_NO = A.OCCP_TY_CD) as OCCP_TY_CD_NM
+           ,A.CUST_ADDR                   as CUST_ADDR
+           ,TO_CHAR(A.WRT_DT, 'YYYYDDMM') as WRT_DT
+           ,B.TSK_DTL_CN                  as TSK_DTL_CN
+           ,row_number() over (PARTITION by A.CUST_NM order by A.CUST_NM desc) as rownumber
+      FROM
+         kcgbd.TB_CUSTMST A
+         left outer join kcgbd.TB_PICTASK B
+            on A.CUST_MBL_TELNO = B.CUST_MBL_TELNO
+      WHERE 1=1
+        and A.CUST_MBL_TELNO = #{cust_mbl_telno} ) A
+   </select>
+   
+   <select id="getCustInfoList" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getCustInfoList */
+       select
+            A.CUST_NM             as CUST_NM 
+           ,SUBSTRING(A.RRNO,1,6) as RRNO
+           ,A.CUST_MBL_TELNO      as CUST_MBL_TELNO
+           ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '140' AND CODE_NO = A.OCCP_TY_CD) as OCCP_TY_CD_NM
+           ,A.CUST_ADDR           as CUST_ADDR
+        from kcgbd.TB_CUSTMST    A
+            ,kcgbd.TB_CUSTPICREL B
+            ,kcgbd.TB_PICMST     C
+        WHERE 1=1
+          and A.CUST_MBL_TELNO = B.CUST_MBL_TELNO
+          and B.PIC_MBL_TELNO  = C.PIC_MBL_TELNO
+          and A.CURR_STCD      = '0'
+          and B.CURR_STCD      = '0'
+          and C.CURR_STCD      = '0'
+        <if test='pic_nm != ""'>
+         AND C.PIC_NM = #{pic_nm}
+       </if>
+       <if test='dept_nm != ""'>
+         AND C.DEPT_NM = #{dept_nm}
+       </if>
+       <if test='cust_nm != ""'>
+            and A.CUST_NM = #{cust_nm}
+        </if>
+        <if test='rrno != ""'>
+             and SUBSTRING(A.RRNO,1,6) = #{rrno}
+        </if>
+   </select>
+   
+   <select id="getCustInfoListAll" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getListAll */
+       select
+             A.CUST_NM             as CUST_NM 
+            ,SUBSTRING(A.RRNO,1,6) as RRNO
+            ,A.CUST_MBL_TELNO      as CUST_MBL_TELNO
+            ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '140' AND CODE_NO = A.OCCP_TY_CD) as OCCP_TY_CD_NM
+            ,A.CUST_ADDR           as CUST_ADDR
+         from kcgbd.TB_CUSTMST    A
+        WHERE 1=1
+          and A.CURR_STCD      = '0'
+   </select>
+   
+   <select id="getCustCardInfo" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getCustCardInfo */
+      select A.CUST_NM                     as CUST_NM
+              ,A.RRNO                        as RRNO
+              ,A.CUST_MBL_TELNO              as CUST_MBL_TELNO
+              ,A.CO_TELNO                    as CO_TELNO
+              ,A.CUST_EML_ADDR               as CUST_EML_ADDR
+              ,A.OCCP_TY_CD_NM               as OCCP_TY_CD_NM
+              ,A.CUST_ADDR                   as CUST_ADDR
+              ,A.PIC_NM                      as PIC_NM
+              ,A.DEPT_NM                     as DEPT_NM
+              ,A.JBPS_TY_CD_NM               as JBPS_TY_CD_NM
+              ,A.PIC_MBL_TELNO               as PIC_MBL_TELNO 
+              ,A.TSK_DTL_CN                  as TSK_DTL_CN
+          from  
+          (select A.CUST_NM                     as CUST_NM
+                 ,A.RRNO                        as RRNO
+                 ,A.CUST_MBL_TELNO              as CUST_MBL_TELNO
+                 ,A.CO_TELNO                    as CO_TELNO
+                 ,A.CUST_EML_ADDR               as CUST_EML_ADDR
+                 ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '140' AND CODE_NO = A.OCCP_TY_CD) as OCCP_TY_CD_NM
+                 ,A.CUST_ADDR                   as CUST_ADDR
+                 ,C.PIC_NM                      as PIC_NM
+                 ,C.DEPT_NM                     as DEPT_NM
+                 ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '141' AND CODE_NO = C.JBPS_TY_CD) as JBPS_TY_CD_NM
+                 ,C.PIC_MBL_TELNO               as PIC_MBL_TELNO 
+                 ,D.TSK_DTL_CN                  as TSK_DTL_CN    
+                 ,row_number() over (PARTITION by A.CUST_NM order by A.CUST_NM desc) as rownumber
+            from kcgbd.TB_CUSTMST    A
+                ,kcgbd.TB_CUSTPICREL B    
+                ,kcgbd.TB_PICMST     C
+                left outer join kcgbd.TB_PICTASK D
+                on C.PIC_MBL_TELNO = D.PIC_MBL_TELNO
+           where 1=1
+             and A.CUST_MBL_TELNO = B.CUST_MBL_TELNO
+             and B.PIC_MBL_TELNO  = C.PIC_MBL_TELNO
+             and A.CURR_STCD      = '0'
+             and B.CURR_STCD      = '0'
+             and C.CURR_STCD      = '0'
+             and A.CUST_MBL_TELNO = #{cust_mbl_telno}) A
+           where A.rownumber = 1
+   </select>
+   
+   <select id="getInitInfo" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getInitInfo */
+      select 
+           A.PIC_NM                      as PIC_NM
+            ,A.DEPT_NM                     as DEPT_NM
+            ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '141' AND CODE_NO = A.JBPS_TY_CD) as JBPS_TY_CD_NM
+            ,A.PIC_MBL_TELNO               as PIC_MBL_TELNO
+            ,A.PIC_EML_ADDR                as PIC_EML_ADDR
+            ,A.JNCMP_YMD                   as JNCMP_YMD 
+            ,A.ETC_TSK_CN                  as ETC_TSK_CN
+         from kcgbd.TB_PICMST  A
+        where 1=1
+          and A.CURR_STCD      = '0'
+          and A.PIC_NM = #{pic_nm}
+   </select>
+   
+   <select id="getPicSelInfo" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getPicSelInfo */
+      select 
+           A.PIC_NM                      as PIC_NM2
+            ,A.DEPT_NM                     as DEPT_NM
+            ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '141' AND CODE_NO = A.JBPS_TY_CD) as JBPS_TY_CD_NM
+            ,A.PIC_MBL_TELNO               as PIC_MBL_TELNO
+            ,A.PIC_EML_ADDR                as PIC_EML_ADDR
+            ,A.JNCMP_YMD                   as JNCMP_YMD 
+            ,A.ETC_TSK_CN                  as ETC_TSK_CN
+         from kcgbd.TB_PICMST  A
+        where 1=1
+          and A.CURR_STCD      = '0'
+          and A.PIC_NM = #{pic_nm}
+   </select>
+   
+   <select id="getPicInfo" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getPicInfo */
+      select 
+           A.PIC_NM                      as PIC_NM
+            ,A.DEPT_NM                     as DEPT_NM
+            ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '141' AND CODE_NO = A.JBPS_TY_CD) as JBPS_TY_CD_NM
+            ,A.PIC_MBL_TELNO               as PIC_MBL_TELNO
+         from kcgbd.TB_PICMST  A
+        where 1=1
+          and A.CURR_STCD      = '0'
+   </select>
+   
+   <update id="updatePicRoof" parameterType="cmmnMap">
+   /* system.cust_mng.updatePicRoof */
+      UPDATE 
+         kcgbd.TB_CUSTPICREL 
+      SET
+         PIC_MBL_TELNO = #{pic_mbl_telno}
+      WHERE 1=1
+         AND CUST_MBL_TELNO = #{cust_mbl_telno}
+   </update>
+   
+   <update id="updateStcdRoof" parameterType="cmmnMap">
+   /* system.cust_mng.updateStcdRoof */
+      UPDATE 
+         kcgbd.TB_CUSTPICREL 
+      SET
+         CURR_STCD = '9'
+      WHERE 1=1
+        AND CUST_MBL_TELNO = #{cust_mbl_telno}
+   </update>
+   
+   <select id="getCustInfo" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getCustInfo */
+      SELECT  A.CUST_NM                     as CUST_NM  
+          FROM kcgbd.TB_CUSTMST A
+         where 1=1
+           and A.CURR_STCD      = '0'
+         <if test='cust_nm != ""'>
+            and A.CUST_NM = #{cust_nm}
+        </if>
+   </select>
+   
+   <select id="getCustOne" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getCustOne */
+      SELECT A.CUST_NM                     as CUST_NM2
+            ,A.WRT_DT                      as WRT_DT
+              ,A.RRNO                        as RRNO
+              ,A.CUST_EML_ADDR               as CUST_EML_ADDR
+              ,A.CO_TELNO                    as CO_TELNO
+              ,A.CUST_MBL_TELNO              as CUST_MBL_TELNO
+              ,A.OCCP_TY_CD_NM               as OCCP_TY_CD_NM
+              ,A.CUST_ADDR                   as CUST_ADDR
+              ,A.TSK_DTL_CN                  as TSK_DTL_CN
+              ,A.OCCP_TY_CD                  as OCCP_TY_CD
+        FROM 
+      (SELECT
+         A.CUST_NM                     as CUST_NM
+           ,A.RRNO                        as RRNO
+           ,A.CUST_MBL_TELNO              as CUST_MBL_TELNO
+           ,A.CO_TELNO                    as CO_TELNO
+           ,A.CUST_EML_ADDR               as CUST_EML_ADDR
+           ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '140' AND CODE_NO = A.OCCP_TY_CD) as OCCP_TY_CD_NM
+           ,A.CUST_ADDR                   as CUST_ADDR
+           ,TO_CHAR(A.WRT_DT, 'YYYYDDMM') as WRT_DT
+           ,D.TSK_DTL_CN                  as TSK_DTL_CN
+           ,A.OCCP_TY_CD                  as OCCP_TY_CD 
+           ,row_number() over (PARTITION by A.CUST_NM order by A.CUST_NM desc) as rownumber
+      FROM
+           kcgbd.TB_CUSTMST    A
+            ,kcgbd.TB_CUSTPICREL B    
+            ,kcgbd.TB_PICMST     C
+             left outer join kcgbd.TB_PICTASK D
+             on C.PIC_MBL_TELNO = D.PIC_MBL_TELNO
+       WHERE 1=1
+        and A.CUST_MBL_TELNO = B.CUST_MBL_TELNO
+          and B.PIC_MBL_TELNO  = C.PIC_MBL_TELNO
+          and A.CURR_STCD      = '0'
+          and B.CURR_STCD      = '0'
+          and C.CURR_STCD      = '0'
+        and A.CUST_NM = #{cust_nm} ) A
+         WHERE rownumber = 1
+   </select>
+   
+   <update id="updateCust" parameterType="cmmnMap">
+   /* system.cust_mng.updateCust */
+      UPDATE 
+         kcgbd.TB_CUSTMST 
+      SET
+         cust_nm  = #{cust_nm}
+         ,wrt_dt   = now()
+         ,rrno     = #{rrno}
+         ,cust_eml_addr = #{cust_eml_addr}
+         ,co_telno = #{co_telno}
+         ,cust_mbl_telno = #{cust_mbl_telno}
+         ,occp_ty_cd = #{occp_ty_cd}
+         ,cust_addr = #{cust_addr} 
+      WHERE 1=1
+        AND CUST_MBL_TELNO = #{cust_mbl_telno}
+   </update>
+   
+   <update id="updatePic" parameterType="cmmnMap">
+   /* system.cust_mng.updatePic */
+      UPDATE 
+         kcgbd.TB_PICMST 
+      SET
+         pic_nm  = #{pic_nm}
+         ,dept_nm     = #{dept_nm}
+         ,jbps_ty_cd = #{jbps_ty_cd}
+         ,pic_eml_addr = #{pic_eml_addr}
+         ,jncmp_ymd = #{jncmp_ymd}
+         ,etc_tsk_cn = #{etc_tsk_cn}
+         ,wrt_dt   = now() 
+      WHERE 1=1
+        AND PIC_MBL_TELNO = #{pic_mbl_telno}
+   </update>
+   
+   <select id="getPicOne" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getPicOne */
+      select 
+           C.PIC_NM                      as PIC_NM
+            ,C.DEPT_NM                     as DEPT_NM
+            ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '141' AND CODE_NO = C.JBPS_TY_CD) as JBPS_TY_CD_NM
+            ,C.PIC_MBL_TELNO               as PIC_MBL_TELNO
+         FROM
+           kcgbd.TB_CUSTMST    A
+            ,kcgbd.TB_CUSTPICREL B    
+            ,kcgbd.TB_PICMST     C
+       WHERE 1=1
+        and A.CUST_MBL_TELNO = B.CUST_MBL_TELNO
+          and B.PIC_MBL_TELNO  = C.PIC_MBL_TELNO
+          and A.CURR_STCD      = '0'
+          and B.CURR_STCD      = '0'
+          and C.CURR_STCD      = '0'
+        and A.CUST_MBL_TELNO = #{cust_mbl_telno} 
+   </select>
+   
+   <update id="updateCustStcd" parameterType="cmmnMap">
+   /* system.cust_mng.updateCustStcd */
+      UPDATE 
+         kcgbd.TB_CUSTMST 
+      SET
+         CURR_STCD = '9'
+      WHERE 1=1
+        AND CUST_MBL_TELNO = #{cust_mbl_telno}
+   </update>
+   
+   <update id="updatePicStcd" parameterType="cmmnMap">
+   /* system.cust_mng.updatePicStcd */
+      UPDATE 
+         kcgbd.TB_PICMST 
+      SET
+         CURR_STCD = '9'
+      WHERE 1=1
+        AND PIC_MBL_TELNO = #{pic_mbl_telno}
+   </update>
+   
+   <insert id="insertCustInfo" parameterType="cmmnMap">
+   /* system.cust_mng.insertCustInfo */
+      INSERT INTO kcgbd.TB_CUSTMST(
+         cust_nm
+          ,rrno
+          ,cust_mbl_telno
+          ,co_telno
+          ,cust_eml_addr
+          ,occp_ty_cd
+          ,cust_addr
+          ,wrter_nm
+          ,wrt_dt
+          ,curr_stcd
+      )VALUES(
+         #{cust_nm}
+          ,#{rrno}
+          ,#{cust_mbl_telno}
+          ,#{co_telno}
+          ,#{cust_eml_addr}
+          ,#{occp_ty_cd}
+          ,#{cust_addr}
+          ,#{wrter_nm}
+          ,now()
+          ,#{curr_stcd}
+      )
+   </insert>
+   
+   <insert id="insertPicRel" parameterType="cmmnMap">
+   /* system.cust_mng.insertPicRel */
+      INSERT INTO kcgbd.TB_CUSTPICREL(
+          pic_mbl_telno
+          ,cust_mbl_telno
+          ,rel_ty_cd
+          ,wrter_nm
+          ,wrt_dt
+          ,curr_stcd
+      )VALUES(
+         #{pic_mbl_telno}
+          ,#{cust_mbl_telno}
+          ,#{rel_ty_cd}
+          ,#{wrter_nm}
+          ,now()
+          ,#{curr_stcd}
+      )
+   </insert>
+   
+   <insert id="insertPicInfo" parameterType="cmmnMap">
+   /* system.cust_mng.insertPicInfo */
+      INSERT INTO kcgbd.TB_PICMST(
+          pic_nm
+         ,dept_nm
+         ,jbps_ty_cd
+         ,pic_mbl_telno
+         ,pic_eml_addr
+          ,jncmp_ymd
+          ,etc_tsk_cn
+          ,user_id
+          ,user_pswd
+          ,curr_stcd
+          ,wrter_nm
+          ,wrt_dt
+      )VALUES(
+         #{pic_nm}
+         ,#{dept_nm}
+         ,#{jbps_ty_cd}
+         ,#{pic_mbl_telno}
+         ,#{pic_eml_addr}
+          ,#{jncmp_ymd}
+          ,#{etc_tsk_cn}
+          ,#{user_id}
+          ,#{user_pswd}
+          ,#{curr_stcd}
+          ,#{wrter_nm}
+          ,now()
+      )
+   </insert>
+   
+   <select id="getPicName" parameterType="cmmnMap" resultType="cmmnMap">
+   /* system.cust_mng.getPicName */
+      SELECT  A.PIC_NM                     as PIC_NM  
+          FROM kcgbd.TB_PICMST A
+         where 1=1
+           and A.CURR_STCD      = '0'
+         <if test='pic_nm != ""'>
+            and A.PIC_NM = #{pic_nm}
+        </if>
+   </select>
+   
+</mapper>

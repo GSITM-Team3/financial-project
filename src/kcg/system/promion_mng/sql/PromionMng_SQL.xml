@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.promion_mng'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.promion_mng.getlist */
+		select b.cust_nm 
+		     , a.prod_ds_sn
+		     , a.cust_mbl_telno
+		     , to_char(a.wrt_dt,'yyyy-mm-dd') wrt_dt
+		     , b.cust_eml_addr
+		     , a1.prod_ty_cd
+		     , (select code_nm from kcgbd.tb_codemst where code_cl = '121' and code_no = a1.prod_ty_cd ) prod_ty_cd_nm
+		     , a.prod_nm 
+		     , a.suggest_amt
+		     , d.pic_nm
+		     , '1' simpl_ty_cd /* 간편타입코드 : 1.정상, 0.간편 */
+		  from (select prod_ds_sn
+		             , wrt_dt
+		             , prod_cd
+		             , prod_nm
+		             , tot_dpst_amt suggest_amt
+		             , cust_mbl_telno
+		          from kcgbd.tb_proddsgnsavgpl
+		         union
+		        select prod_ds_sn
+		             , wrt_dt
+		             , prod_cd
+		             , prod_nm
+		             , tot_dpst_amt suggest_amt
+		             , cust_mbl_telno
+		          from kcgbd.tb_proddsgnacmlpl
+		         union
+		        select prod_ds_sn
+		             , wrt_dt
+		             , prod_cd
+		             , prod_nm
+		             , tot_dpst_amt suggest_amt
+		             , cust_mbl_telno
+		          from kcgbd.tb_proddsgndpstpl
+		         union
+		        select prod_ds_sn
+		             , wrt_dt
+		             , prod_cd
+		             , prod_nm
+		             , tot_pay_amt suggest_amt
+		             , cust_mbl_telno
+		          from kcgbd.tb_proddsgnloanpl  
+		       ) a
+		     , kcgbd.tb_prodmst a1
+		     , kcgbd.tb_custmst b
+		     , kcgbd.tb_custpicrel c
+		     , kcgbd.tb_picmst d
+		 where a.prod_cd = a1.prod_cd
+		   and a.cust_mbl_telno = b.cust_mbl_telno
+		   and a.cust_mbl_telno = c.cust_mbl_telno
+		   and c.pic_mbl_telno  = d.pic_mbl_telno
+		<if test='cust_nm != null and cust_nm != ""'>
+		   and b.cust_nm like concat('%',#{cust_nm},'%')
+		</if>
+		<if test='prod_nm != null and prod_nm != ""'>
+		   and a.prod_nm like concat('%',#{prod_nm},'%')
+		</if>
+		<if test='pic_nm != null and pic_nm != ""'>
+		   and d.pic_nm like concat('%',#{pic_nm},'%')
+		</if>
+		<if test='wrt_dt != null and wrt_dt != ""'>
+		   and to_char(a.wrt_dt,'yyyy-mm-dd') = #{wrt_dt}
+		</if>
+		order by a.wrt_dt desc, a.prod_ds_sn desc
+	</select>
+	
+	<select id="getProdInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.promion_mng.getprodinfo */
+		select prod_cd
+		     , prod_nm
+		     , prod_ty_cd
+		     , sbstg_ty_cd
+		     , ntsl_amt_min
+		     , ntsl_amt_max
+		     , prod_air_min
+		     , prod_air_max
+		     , pay_ty_cd
+		     , prod_air_bgng_ymd
+		     , prod_air_end_ymd
+		     , int_tax_ty_cd
+		     , curr_stcd
+		     , ntsl_bgng_ymd
+		     , ntsl_end_ymd
+		     , wrter_nm
+		     , wrt_dt
+		     /*적금*/
+		     , 0 as circle_acml_amt
+		     , 0 as goal_amt
+		     , 0 as goal_prd
+		     , 0 as tot_dpst_amt
+		     , 0 as tot_dpst_int
+		     , 0 as int_tax_amt
+		     , 0 as bfo_rcve_amt
+		     , 0 as atx_rcve_amt
+		     /*예금*/
+		     , 0 as dpst_amt
+		     , 0 as dpst_prd
+		     /*대출*/
+		     , '' as loan_rpty_cd
+		     , 0 as loan_amt
+		     , 0 as loan_rate
+		     , 0 as repy_prd
+		     , 0 as hold_prd
+		     , 0 as circle_pay_amt
+		     , 0 as circle_repy_amt
+		     , 0 as circle_int
+		     , 0 as tot_int_amt
+		     , 0 as tot_pay_amt
+		     , 0 as circle_acml_amt_fmt
+		     , 0 as circle_acml_amt
+		     , 0 as tot_dpst_amt_fmt
+		     , 0 as tot_dpst_int_fmt
+		     , 0 as int_tax_amt_fmt
+		     , 0 as bfo_rcve_amt_fmt
+		     , 0 as atx_rcve_amt_fmt
+		     , 0 as loan_amt_fmt
+		     , 0 as circle_pay_amt_fmt
+		     , 0 as circle_repy_amt_fmt
+		     , 0 as circle_int_fmt
+		     , 0 as tot_int_amt_fmt
+		     , 0 as tot_pay_amt_fmt
+		  from kcgbd.tb_prodmst
+		 where prod_cd = #{prod_cd}
+	</select>
+	
+	<select id="getDsgnSavgpl" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.promion_mng.getDsgnSavgpl */
+        select a.prod_ds_sn
+             , a.prod_cd
+			 , a.prod_nm
+			 , a.cust_mbl_telno
+             , a.int_cty_cd
+			 , a.pay_ty_cd
+			 , a.circle_acml_amt
+			 , a.goal_prd
+			 , a.aply_rate
+			 , a.int_tax_ty_cd
+			 , a.tot_dpst_amt
+			 , a.tot_dpst_int
+			 , a.int_tax_amt
+			 , a.atx_rcve_amt
+			 , to_char(a.wrt_dt,'yyyy-mm-dd') wrt_dt
+		     , b.prod_ty_cd
+			 , b.sbstg_ty_cd
+			 , b.ntsl_amt_min
+			 , b.ntsl_amt_max
+			 , b.prod_air_min
+			 , b.prod_air_max
+			 , b.prod_air_bgng_ymd
+			 , b.prod_air_end_ymd
+			 , b.curr_stcd
+			 , b.ntsl_bgng_ymd
+			 , b.ntsl_end_ymd
+		  from kcgbd.tb_proddsgnsavgpl a
+		     , kcgbd.tb_prodmst b
+		 where a.prod_cd = b.prod_cd 
+		   and a.prod_ds_sn = cast(#{prod_ds_sn} as numeric(5))
+	</select>
+	
+	<select id="getDsgnAcmlpl" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.promion_mng.getDsgnAcmlpl */
+        select a.prod_ds_sn
+             , a.prod_cd
+			 , a.prod_nm
+			 , a.cust_mbl_telno
+             , a.int_cty_cd
+			 , a.pay_ty_cd
+			 , a.circle_acml_amt
+			 , a.goal_amt
+			 , a.goal_prd
+			 , a.aply_rate
+			 , a.int_tax_ty_cd
+			 , a.tot_dpst_amt
+			 , a.tot_dpst_int
+			 , a.int_tax_amt
+			 , a.atx_rcve_amt
+			 , to_char(a.wrt_dt,'yyyy-mm-dd') wrt_dt
+		     , b.prod_ty_cd
+			 , b.sbstg_ty_cd
+			 , b.ntsl_amt_min
+			 , b.ntsl_amt_max
+			 , b.prod_air_min
+			 , b.prod_air_max
+			 , b.prod_air_bgng_ymd
+			 , b.prod_air_end_ymd
+			 , b.curr_stcd
+			 , b.ntsl_bgng_ymd
+			 , b.ntsl_end_ymd
+		  from kcgbd.tb_proddsgnacmlpl a
+		     , kcgbd.tb_prodmst b
+		 where a.prod_cd = b.prod_cd 
+		   and a.prod_ds_sn = cast(#{prod_ds_sn} as numeric(5))
+	</select>
+	
+	<select id="getDsgnDpstpl" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.promion_mng.getDsgnDpstpl */
+        select a.prod_ds_sn
+             , a.prod_cd
+			 , a.prod_nm
+			 , a.cust_mbl_telno
+             , a.int_cty_cd
+			 , a.pay_ty_cd
+			 , a.dpst_amt
+			 , a.dpst_prd
+			 , a.aply_rate
+			 , a.int_tax_ty_cd
+			 , a.tot_dpst_amt
+			 , a.tot_dpst_int
+			 , a.int_tax_amt
+			 , a.atx_rcve_amt
+			 , to_char(a.wrt_dt,'yyyy-mm-dd') wrt_dt
+		     , b.prod_ty_cd
+			 , b.sbstg_ty_cd
+			 , b.ntsl_amt_min
+			 , b.ntsl_amt_max
+			 , b.prod_air_min
+			 , b.prod_air_max
+			 , b.prod_air_bgng_ymd
+			 , b.prod_air_end_ymd
+			 , b.curr_stcd
+			 , b.ntsl_bgng_ymd
+			 , b.ntsl_end_ymd
+		  from kcgbd.tb_proddsgndpstpl a
+		     , kcgbd.tb_prodmst b
+		 where a.prod_cd = b.prod_cd 
+		   and a.prod_ds_sn = cast(#{prod_ds_sn} as numeric(5))
+	</select>
+	
+	<select id="getDsgnLoanpl" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.promion_mng.getDsgnLoanpl */
+        select a.prod_ds_sn
+             , a.prod_cd
+			 , a.prod_nm
+			 , a.cust_mbl_telno
+             , a.int_cty_cd
+			 , a.loan_rpty_cd
+			 , a.loan_amt
+			 , a.loan_rate
+			 , a.repy_prd
+			 , a.hold_prd
+			 , a.circle_pay_amt
+			 , a.circle_repy_amt
+			 , a.circle_int
+			 , a.tot_int_amt
+			 , a.tot_pay_amt
+			 , to_char(a.wrt_dt,'yyyy-mm-dd') wrt_dt
+			 , b.prod_ty_cd
+			 , b.sbstg_ty_cd
+			 , b.ntsl_amt_min
+			 , b.ntsl_amt_max
+			 , b.prod_air_min
+			 , b.prod_air_max
+			 , b.prod_air_bgng_ymd
+			 , b.prod_air_end_ymd
+			 , b.curr_stcd
+			 , b.ntsl_bgng_ymd
+			 , b.ntsl_end_ymd
+		  from kcgbd.tb_proddsgnloanpl a
+		     , kcgbd.tb_prodmst b
+		 where a.prod_cd = b.prod_cd 
+		   and a.prod_ds_sn = cast(#{prod_ds_sn} as numeric(5))
+	</select>
+	
+	<insert id="insertDsgnSavgpl" parameterType="cmmnMap">
+	/* system.promion_mng.insertDsgnSavgpl */
+		insert 
+		  into kcgbd.tb_proddsgnsavgpl (
+		  	   prod_ds_sn
+		  	 , int_cty_cd
+		  	 , prod_nm
+		  	 , pay_ty_cd
+		  	 , circle_acml_amt
+		  	 , goal_prd
+		  	 , aply_rate
+		  	 , int_tax_ty_cd
+		  	 , wrt_dt
+		  	 , tot_dpst_amt
+		  	 , tot_dpst_int
+		  	 , int_tax_amt
+		  	 , atx_rcve_amt
+		  	 , cust_mbl_telno
+		  	 , prod_cd
+		  	 )
+		values (
+		       (select coalesce(max(prod_ds_sn), 0) + 1 from kcgbd.tb_proddsgnsavgpl)
+		  	 , #{int_cty_cd}
+		  	 , #{prod_nm}
+		  	 , #{pay_ty_cd}
+		  	 , #{circle_acml_amt}
+		  	 , #{goal_prd}
+		  	 , cast(#{aply_rate} as numeric(5,2))
+		  	 , #{int_tax_ty_cd}
+		  	 , now()
+		  	 , #{tot_dpst_amt}
+		  	 , #{tot_dpst_int}
+		  	 , #{int_tax_amt}
+		  	 , #{atx_rcve_amt}
+		  	 , #{cust_mbl_telno}
+		  	 , #{prod_cd}
+		     )
+	</insert>
+	
+	<update id="updateDsgnSavgpl" parameterType="cmmnMap">
+	/* system.promion_mng.updateDsgnSavgpl */
+		update kcgbd.tb_proddsgnsavgpl
+		   set int_cty_cd = #{int_cty_cd}
+		     , prod_nm = #{prod_nm}
+		     , pay_ty_cd = #{pay_ty_cd}
+		     , circle_acml_amt = cast(#{circle_acml_amt} as numeric(15))
+		     , goal_prd = cast(#{goal_prd} as numeric(5))
+		     , aply_rate = cast(#{aply_rate} as numeric(5,2))
+		     , int_tax_ty_cd = #{int_tax_ty_cd}
+		     , wrt_dt = now()
+		     , tot_dpst_amt = cast(#{tot_dpst_amt} as numeric(15))
+		     , tot_dpst_int = cast(#{tot_dpst_int} as numeric(15))
+		     , int_tax_amt = cast(#{int_tax_amt} as numeric(15))
+		     , atx_rcve_amt = cast(#{atx_rcve_amt} as numeric(15))
+		     , cust_mbl_telno = #{cust_mbl_telno}
+		     , prod_cd = #{prod_cd}
+		 where prod_ds_sn = cast(#{prod_ds_sn} as numeric(5))
+	</update>
+	
+	
+	<insert id="insertDsgnAcmlpl" parameterType="cmmnMap">
+	/* system.promion_mng.insertDsgnAcmlpl */
+		insert 
+		  into kcgbd.tb_proddsgnacmlpl (
+		  	   prod_ds_sn
+		  	 , int_cty_cd
+		  	 , prod_nm
+		  	 , pay_ty_cd
+		  	 , circle_acml_amt
+		  	 , goal_amt
+		  	 , goal_prd
+		  	 , aply_rate
+		  	 , int_tax_ty_cd
+		  	 , wrt_dt
+		  	 , tot_dpst_amt
+		  	 , tot_dpst_int
+		  	 , int_tax_amt
+		  	 , atx_rcve_amt
+		  	 , cust_mbl_telno
+		  	 , prod_cd
+		  	 )
+		values (
+		       (select coalesce(max(prod_ds_sn), 0) + 1 from kcgbd.tb_proddsgnacmlpl)
+		  	 , #{int_cty_cd}
+		  	 , #{prod_nm}
+		  	 , #{pay_ty_cd}
+		  	 , #{circle_acml_amt}
+		  	 , #{goal_amt}
+		  	 , #{goal_prd}
+		  	 , cast(#{aply_rate} as numeric(5,2))
+		  	 , #{int_tax_ty_cd}
+		  	 , now()
+		  	 , #{tot_dpst_amt}
+		  	 , #{tot_dpst_int}
+		  	 , #{int_tax_amt}
+		  	 , #{atx_rcve_amt}
+		  	 , #{cust_mbl_telno}
+		  	 , #{prod_cd}
+		     )
+	</insert>
+	
+	<update id="updateDsgnAcmlpl" parameterType="cmmnMap">
+	/* system.promion_mng.updateDsgnAcmlpl */
+		update kcgbd.tb_proddsgnacmlpl
+		   set int_cty_cd = #{int_cty_cd}
+		     , prod_nm = #{prod_nm}
+		     , pay_ty_cd = #{pay_ty_cd}
+		     , circle_acml_amt = cast(#{circle_acml_amt} as numeric(15))
+		     , goal_amt = cast(#{goal_amt} as numeric(15))
+		     , goal_prd = cast(#{goal_prd} as numeric(5))
+		     , aply_rate = cast(#{aply_rate} as numeric(5,2))
+		     , int_tax_ty_cd = #{int_tax_ty_cd}
+		     , wrt_dt = now()
+		     , tot_dpst_amt = cast(#{tot_dpst_amt} as numeric(15))
+		     , tot_dpst_int = cast(#{tot_dpst_int} as numeric(15))
+		     , int_tax_amt = cast(#{int_tax_amt} as numeric(15))
+		     , atx_rcve_amt = cast(#{atx_rcve_amt} as numeric(15))
+		     , cust_mbl_telno = #{cust_mbl_telno}
+		     , prod_cd = #{prod_cd}
+		 where prod_ds_sn = cast(#{prod_ds_sn} as numeric(5))
+	</update>
+	
+	<insert id="insertDsgnDpstpl" parameterType="cmmnMap">
+	/* system.promion_mng.insertDsgnDpstpl */
+		insert 
+		  into kcgbd.tb_proddsgndpstpl (
+		  	   prod_ds_sn
+		  	 , int_cty_cd
+		  	 , prod_nm
+		  	 , pay_ty_cd
+		  	 , dpst_amt
+		  	 , dpst_prd
+		  	 , aply_rate
+		  	 , int_tax_ty_cd
+		  	 , wrt_dt
+		  	 , tot_dpst_amt
+		  	 , tot_dpst_int
+		  	 , int_tax_amt
+		  	 , atx_rcve_amt
+		  	 , cust_mbl_telno
+		  	 , prod_cd
+		  	 )
+		values (
+		       (select coalesce(max(prod_ds_sn), 0) + 1 from kcgbd.tb_proddsgndpstpl)
+		  	 , #{int_cty_cd}
+		  	 , #{prod_nm}
+		  	 , #{pay_ty_cd}
+		  	 , #{dpst_amt}
+		  	 , #{dpst_prd}
+		  	 , cast(#{aply_rate} as numeric(5,2))
+		  	 , #{int_tax_ty_cd}
+		  	 , now()
+		  	 , #{tot_dpst_amt}
+		  	 , #{tot_dpst_int}
+		  	 , #{int_tax_amt}
+		  	 , #{atx_rcve_amt}
+		  	 , #{cust_mbl_telno}
+		  	 , #{prod_cd}
+		     )
+	</insert>
+	
+	<update id="updateDsgnDpstpl" parameterType="cmmnMap">
+	/* system.promion_mng.updateDsgnDpstpl */
+		update kcgbd.tb_proddsgndpstpl
+		   set int_cty_cd = #{int_cty_cd}
+		     , prod_nm = #{prod_nm}
+		     , pay_ty_cd = #{pay_ty_cd}
+		     , dpst_amt = cast(#{dpst_amt} as numeric(15))
+		     , dpst_prd = cast(#{dpst_prd} as numeric(5))
+		     , aply_rate = cast(#{aply_rate} as numeric(5,2))
+		     , int_tax_ty_cd = #{int_tax_ty_cd}
+		     , wrt_dt = now()
+		     , tot_dpst_amt = cast(#{tot_dpst_amt} as numeric(15))
+		     , tot_dpst_int = cast(#{tot_dpst_int} as numeric(15))
+		     , int_tax_amt = cast(#{int_tax_amt} as numeric(15))
+		     , atx_rcve_amt = cast(#{atx_rcve_amt} as numeric(15))
+		     , cust_mbl_telno = #{cust_mbl_telno}
+		     , prod_cd = #{prod_cd}
+		 where prod_ds_sn = cast(#{prod_ds_sn} as numeric(5))
+	</update>
+	
+	
+	
+	<insert id="insertDsgnLoanpl" parameterType="cmmnMap">
+	/* system.promion_mng.insertDsgnLoanpl */
+		insert 
+		  into kcgbd.tb_proddsgnloanpl (
+		  	   prod_ds_sn
+		  	 , int_cty_cd
+		  	 , prod_nm
+		  	 , loan_rpty_cd
+		  	 , loan_amt
+		  	 , loan_rate
+		  	 , repy_prd
+		  	 , hold_prd
+		  	 , wrt_dt
+		  	 , circle_pay_amt
+		  	 , circle_repy_amt
+		  	 , circle_int
+		  	 , tot_int_amt
+		  	 , tot_pay_amt
+		  	 , cust_mbl_telno
+		  	 , prod_cd
+		  	 )
+		values (
+		       (select coalesce(max(prod_ds_sn), 0) + 1 from kcgbd.tb_proddsgnloanpl)
+		  	 , #{int_cty_cd}
+		  	 , #{prod_nm}
+		  	 , #{loan_rpty_cd}
+		  	 , #{loan_amt}
+		  	 , cast(#{loan_rate} as numeric(5,2))
+		  	 , #{repy_prd}
+		  	 , #{hold_prd}
+		  	 , now()
+		  	 , #{circle_pay_amt}
+		  	 , #{circle_repy_amt}
+		  	 , #{circle_int}
+		  	 , #{tot_int_amt}
+		  	 , #{tot_pay_amt}
+		  	 , #{cust_mbl_telno}
+		  	 , #{prod_cd}
+		     )
+	</insert>
+	
+	<update id="updateDsgnLoanpl" parameterType="cmmnMap">
+	/* system.promion_mng.updateDsgnLoanpl */
+		update kcgbd.tb_proddsgnloanpl
+		   set int_cty_cd = #{int_cty_cd}
+		     , prod_nm = #{prod_nm}
+		     , loan_rpty_cd = #{loan_rpty_cd}
+		     , loan_amt = cast(#{loan_amt} as numeric(15))
+		     , loan_rate = cast(#{loan_rate} as numeric(5,2))
+		     , repy_prd = cast(#{repy_prd} as numeric(5))
+		     , hold_prd = cast(#{hold_prd} as numeric(5))
+		     , wrt_dt = now()
+		     , circle_pay_amt = cast(#{circle_pay_amt} as numeric(15))
+		     , circle_repy_amt = cast(#{circle_repy_amt} as numeric(15))
+		     , circle_int = cast(#{circle_int} as numeric(15))
+		     , tot_int_amt = cast(#{tot_int_amt} as numeric(15))
+		     , tot_pay_amt = cast(#{tot_pay_amt} as numeric(15))
+		     , cust_mbl_telno = #{cust_mbl_telno}
+		     , prod_cd = #{prod_cd}
+		 where prod_ds_sn = cast(#{prod_ds_sn} as numeric(5))
+	</update>
+	
+	
+</mapper>

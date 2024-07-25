@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kcg.team3">
+
+	<!-- 공지 리스트 조회 쿼리문 -->
+	<select id="getNoticeList" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getNoticeList */
+		SELECT gw_code,user_id,
+		gw_title, gw_type, gw_content, gw_created_at,
+		gw_updated_at
+		FROM
+		public.tb3_groupware
+		where gw_type = '1'
+		ORDER BY gw_updated_at DESC
+	</select>
+
+	<!-- 공지 리스트 조회 페이징 쿼리문 -->
+	<select id="getNoticeListWithPaging" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getNoticeListWithPaging */
+		SELECT
+		gw_code,user_id,
+		gw_title, gw_type, gw_content, gw_created_at,
+		gw_updated_at
+		FROM
+		public.tb3_groupware
+		where gw_type = '1'
+		ORDER BY gw_updated_at DESC
+		LIMIT #{pageSize} OFFSET #{offset}
+	</select>
+
+	<!-- 공지 추가 쿼리문 -->
+	<insert id="insertNotice" parameterType="cmmnMap">
+		/*
+		kcg.team3.insertNotice */
+		INSERT INTO
+		tb3_groupware(
+		user_id,
+		gw_title,
+		gw_type,
+		gw_content,
+		gw_created_at,
+		gw_updated_at
+		)
+		values(
+		#{user_id},
+		#{gw_title},
+		'1',
+		#{gw_content},
+		now(),
+		now()
+		)
+	</insert>
+
+	<!-- 공지 업데이트 쿼리문 -->
+	<update id="updateNotice" parameterType="cmmnMap">
+		/*
+		kcg.team3.updateNotice */
+		UPDATE tb3_groupware
+		SET gw_title =
+		#{gw_title}, gw_content = #{gw_content}, gw_updated_at =
+		now()
+		WHERE
+		gw_code = #{gw_code};
+	</update>
+
+	<!-- 공지 하나 쿼리문 -->
+	<select id="getNoticeOne" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getNoticeOne */
+		SELECT gw_code,user_id,
+		gw_title, gw_type, gw_content, gw_created_at,
+		gw_updated_at
+		FROM
+		public.tb3_groupware
+		where gw_type = '1' and gw_code = #{gw_code};
+	</select>
+
+	<!-- 공지 삭제 쿼리문 -->
+	<delete id="deleteNotice" parameterType="cmmnMap">
+		/*
+		kcg.team3.deleteNotice */
+		DELETE FROM public.tb3_groupware
+		WHERE gw_code
+		= #{gw_code};
+	</delete>
+
+	<!-- 템플릿 리스트 조회 쿼리문 -->
+	<select id="getTemplateList" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getTemplateList */
+		SELECT gw_code,user_id,
+		gw_title, gw_type, gw_content, gw_created_at,
+		gw_updated_at
+		FROM
+		public.tb3_groupware
+		where gw_type = '2'
+	</select>
+
+	<!-- 템플릿 리스트 조회 페이징 쿼리문 -->
+	<select id="getTemplateListWithPaging" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getTemplateListWithPaging */
+		SELECT
+		gw_code,user_id,
+		gw_title, gw_type, gw_content, gw_created_at,
+		gw_updated_at
+		FROM
+		public.tb3_groupware
+		where gw_type = '2'
+		ORDER BY gw_updated_at DESC
+		LIMIT #{pageSize} OFFSET
+		#{offset}
+	</select>
+
+	<!-- 템플릿 추가 쿼리문 -->
+	<insert id="insertTemplate" parameterType="cmmnMap">
+		/*
+		kcg.team3.insertTemplate */
+		INSERT INTO
+		tb3_groupware(
+		user_id,
+		gw_title,
+		gw_type,
+		gw_content,
+		gw_created_at,
+		gw_updated_at
+		)
+		values(
+		#{user_id},
+		#{gw_title},
+		'2',
+		#{gw_content},
+		now(),
+		now()
+		)
+	</insert>
+
+	<!-- 템플릿 하나 쿼리문 -->
+	<select id="getTemplateOne" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getTemplateOne */
+		SELECT gw_code,user_id,
+		gw_title, gw_type, gw_content, gw_created_at,
+		gw_updated_at
+		FROM
+		public.tb3_groupware
+		where gw_type = '2' and gw_code = #{gw_code};
+	</select>
+
+	<!-- 메인용 쿼리문 -->
+	<select id="getNoticeForMainLimit5" resultType="cmmnMap">
+		/*
+		kcg.team3.getNoticeForMainLimit5 */
+		SELECT gw_code, user_id,
+		gw_title, gw_type, gw_content, gw_created_at,
+		gw_updated_at
+		FROM public.tb3_groupware
+		WHERE gw_type = '1'
+		ORDER BY gw_updated_at DESC
+		LIMIT 5
+
+	</select>
+</mapper>

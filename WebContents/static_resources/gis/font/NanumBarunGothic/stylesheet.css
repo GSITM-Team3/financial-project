@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'NanumBarunGothic';
+    src: url('NanumBarunGothicLight.eot');
+    src: url('NanumBarunGothicLight.eot?#iefix') format('embedded-opentype'),
+        url('NanumBarunGothicLight.woff2') format('woff2'),
+        url('NanumBarunGothicLight.woff') format('woff'),
+        url('NanumBarunGothicLight.svg#NanumBarunGothicLight') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'NanumBarunGothic';
+    src: url('NanumBarunGothicBold.eot');
+    src: url('NanumBarunGothicBold.eot?#iefix') format('embedded-opentype'),
+        url('NanumBarunGothicBold.woff2') format('woff2'),
+        url('NanumBarunGothicBold.woff') format('woff'),
+        url('NanumBarunGothicBold.svg#NanumBarunGothicBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'NanumBarunGothic';
+    src: url('NanumBarunGothic.eot');
+    src: url('NanumBarunGothic.eot?#iefix') format('embedded-opentype'),
+        url('NanumBarunGothic.woff2') format('woff2'),
+        url('NanumBarunGothic.woff') format('woff'),
+        url('NanumBarunGothic.svg#NanumBarunGothic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'NanumBarunGothic';
+    src: url('NanumBarunGothicUltraLight.eot');
+    src: url('NanumBarunGothicUltraLight.eot?#iefix') format('embedded-opentype'),
+        url('NanumBarunGothicUltraLight.woff2') format('woff2'),
+        url('NanumBarunGothicUltraLight.woff') format('woff'),
+        url('NanumBarunGothicUltraLight.svg#NanumBarunGothicUltraLight') format('svg');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+

@@ -1,0 +1,132 @@
+.suggest-wrap {
+  > p {
+    padding: 8px;
+    margin: 0;
+    font-size: 16px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #18a9ec;
+      color: #fff;
+    }
+  }
+}
+
+$active-c: #4185ca;
+$inactive-c: #9b9b9b;
+
+.home-tabs {
+  > li {
+    width: 50%;
+    margin: 0 !important;
+    text-align: center;
+    padding: 0 !important;
+
+    > a {
+      display: block;
+      padding: 10px;
+      color: $inactive-c !important;
+      text-decoration: none !important;
+      border-bottom: 1px solid $inactive-c;
+    }
+
+    &.on {
+      > a {
+        padding-bottom: 9px;
+        color: $active-c !important;
+        border-bottom: 2px solid $active-c;
+      }
+    }
+  }
+}
+
+.home-ol-wrap {
+  ol {
+    list-style: none !important;
+    list-style-type: none !important;
+    counter-reset: my-awesome-counter;
+
+    > li {
+      counter-increment: my-awesome-counter;
+      margin: 0 !important;
+      margin-bottom: 16px !important;
+
+      &:before {
+        content: counter(my-awesome-counter);
+        font-weight: bold;
+        display: inline-block;
+        padding: 4px 8px;
+        background: $active-c;
+        border-radius: 2px;
+        color: #fff;
+        font-size: 14px;
+        margin-right: 8px;
+      }
+
+      > a {
+        padding: 4px 0;
+      }
+    }
+  }
+}
+
+.home-ext-links {
+  > a.link-box {
+    color: #333333 !important;
+    letter-spacing: -1px;
+    display: block;
+    padding: 12px !important;
+    text-align: center;
+    font-size: 12px;
+
+    > img {
+      margin: auto;
+      margin-bottom: 8px;
+
+      &.default {
+        display: block;
+      }
+
+      &.hovered {
+        display: none;
+      }
+    }
+
+    &:hover {
+      background-color: $active-c;
+      text-decoration: none !important;
+      color: #fff !important;
+
+      > img {
+        &.default {
+          display: none;
+        }
+
+        &.hovered {
+          display: block;
+        }
+      }
+    }
+  }
+  > a.top-line {
+    padding: 18px !important;
+  }
+}
+
+#notice-cont {
+  padding: 0 !important;
+
+  > ul.list {
+    > li {
+      > a {
+        border-left: 4px solid #a0c2e4;
+        padding-left: 16px !important;
+        height: 82px;
+
+        > em {
+          color: #666;
+        }
+      }
+    }
+  }
+}

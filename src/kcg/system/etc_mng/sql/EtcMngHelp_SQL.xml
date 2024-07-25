@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='etc.mng.help'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* etc.mng.help.getList */
+		SELECT 
+			A.idx
+			,A.sbjt
+			,A.cat
+			,B.cat_nm
+			,to_char(A.reg_dt,'yyyy-mm-dd  hh24:mi:ss') reg_dt
+			,to_char(A.updt_dt,'yyyy-mm-dd  hh24:mi:ss') updt_dt
+			,A.reg_user_id
+			,A.updt_user_id
+			,USR.name reg_user_name
+		FROM kcgbd.t_help_mng A
+			,kcgbd.t_category_mng B
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND A.cat = B.idx
+			AND USR.user_id = A.reg_user_id
+		<if test='search_cat != ""'>
+			AND A.cat  = #{search_cat}
+		</if>
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* etc.mng.help.getInfo */
+		SELECT 
+			A.idx
+			,A.sbjt
+			,A.cat
+			,B.cat_nm
+			,A.ctnt
+			,to_char(A.reg_dt,'yyyy-mm-dd  hh24:mi:ss') reg_dt
+			,to_char(A.updt_dt,'yyyy-mm-dd  hh24:mi:ss') updt_dt
+			,A.reg_user_id
+			,A.updt_user_id
+			,USR.name reg_user_name
+		FROM kcgbd.t_help_mng A
+			,kcgbd.t_category_mng B
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND A.cat = B.idx
+			AND USR.user_id = A.reg_user_id
+			AND A.idx = #{idx}
+	</select>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* etc.mng.help.updateInfo */
+		UPDATE kcgbd.t_help_mng
+		SET 
+			sbjt = #{sbjt}
+			,cat = #{cat}
+			,ctnt = #{ctnt}
+			,updt_dt = NOW()
+			,updt_user_id = #{user_id}
+		WHERE idx = #{idx}
+	</update>
+	
+	<insert id="insertInfo" parameterType="cmmnMap">
+	/* etc.mng.help.insertInfo */
+		INSERT INTO kcgbd.t_help_mng(
+			idx
+			,sbjt
+			,cat
+			,ctnt
+			,reg_dt
+			,updt_dt
+			,reg_user_id
+			,updt_user_id
+		)VALUES(
+			#{idx}
+			,#{sbjt}
+			,#{cat}
+			,#{ctnt}
+			,NOW()
+			,NOW()
+			,#{user_id}
+			,#{user_id}
+		)
+	</insert>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	/* etc.mng.help.deleteInfo */
+		DELETE FROM kcgbd.t_help_mng
+		WHERE idx = #{idx}
+	</delete>
+	
+	
+	<select id="getCategoryList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* etc.mng.help.getCategoryList */
+		SELECT 
+			A.idx
+			,A.cat_nm
+			,to_char(A.reg_dt,'yyyy-mm-dd  hh24:mi:ss') reg_dt
+			,to_char(A.updt_dt,'yyyy-mm-dd  hh24:mi:ss') updt_dt
+			,A.reg_user_id
+			,A.updt_user_id
+		FROM kcgbd.t_category_mng A
+		WHERE 1=1
+		<if test='cat_nm != ""'>
+			AND A.cat_nm  = #{cat_nm}
+		</if>
+	</select>
+	
+	<select id="getCategoryInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* etc.mng.help.getCategoryInfo */
+		SELECT 
+			A.idx
+			,A.cat_nm
+			,to_char(A.reg_dt,'yyyy-mm-dd  hh24:mi:ss') reg_dt
+			,to_char(A.updt_dt,'yyyy-mm-dd  hh24:mi:ss') updt_dt
+			,A.reg_user_id
+			,A.updt_user_id
+		FROM kcgbd.t_category_mng A
+		WHERE idx = #{idx}
+	</select>
+	
+	<insert id="insertCategoryInfo" parameterType="cmmnMap">
+	/* etc.mng.help.insertCategoryInfo */
+		INSERT INTO kcgbd.t_category_mng(
+			idx
+			,cat_nm
+			,reg_dt
+			,updt_dt
+			,reg_user_id
+			,updt_user_id
+		)VALUES(
+			#{idx}
+			,#{cat_nm}
+			,NOW()
+			,NOW()
+			,#{user_id}
+			,#{user_id}
+		)
+	</insert>
+	
+	<update id="updateCategoryInfo" parameterType="cmmnMap">
+	/* etc.mng.help.updateCategoryInfo */
+		UPDATE kcgbd.t_category_mng
+		SET 
+			cat_nm = #{cat_nm}
+			,updt_dt = NOW()
+			,updt_user_id = #{user_id}
+		WHERE idx = #{idx}
+	</update>
+	
+	<delete id="deleteCatogoryInfo" parameterType="cmmnMap">
+	/* etc.mng.help.deleteCatogoryInfo */
+		DELETE FROM kcgbd.t_category_mng
+		WHERE idx = #{idx}
+	</delete>
+	
+</mapper>

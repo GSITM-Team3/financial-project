@@ -1,0 +1,56 @@
+body { /* body의 모든 요소들을 화면 중앙에 정렬*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* 화면의 세로 전체 높이를 사용 */
+    margin: 0;
+    /* body의 기본 마진을 제거합니다. */
+    border: 1px solid black;
+}
+
+form {
+    border: 1px solid black;
+}
+
+
+.title {
+    background: blue;
+}
+
+.submitButton {
+    border: 1px solid black;
+}
+
+
+/*
+
+.fixed {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 300px;
+    width: 300px;
+    border: 1px solid red;
+}
+*/
+.buttonArr {
+    text-align: center;
+}
+
+.contents {
+    border: 1px solid blue;
+    height: 50px;
+    width: 150px;
+    font-size: 12px;
+}
+
+.regist {
+    float:left;
+    border: 1px solid black;
+}
+
+.findPw {
+    float:right;
+    border: 1px solid black;
+}

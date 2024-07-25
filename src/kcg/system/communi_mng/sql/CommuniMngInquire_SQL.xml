@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='communi.mng.inquire'>
+	
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* communi.mng.inquire.getList */
+		SELECT 
+			A.idx
+			,A.sbjt
+			,A.atch_file_1
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_1) atch_file_1_nm
+			,A.atch_file_2
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_2) atch_file_2_nm
+			,A.atch_file_3
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_3) atch_file_3_nm
+			,A.atch_file_4
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_4) atch_file_4_nm
+			,A.atch_file_5
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_5) atch_file_5_nm
+			,A.repl
+			,A.ask_sts
+			,CASE 
+				WHEN A.ask_sts = '1' THEN '문의중'
+				ELSE '답변완료'
+			END AS ask_sts_nm
+			,A.read_cnt
+			,A.reg_dt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd hh24:mi') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd hh24:mi') updt_dt_char
+			,A.reg_user_id
+			,USR.name reg_user_name
+		FROM 
+			kcgbd.t_inquire A
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = A.reg_user_id
+		<if test='search_val != ""'>
+			<if test='search_nm == "sbjt"'>
+				AND A.SBJT like concat('%',#{search_val},'%')
+			</if>
+			<if test='search_nm == "reg_user_name"'>
+				AND USR.name like concat('%',#{search_val},'%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* communi.mng.inquire.getInfo */
+		SELECT 
+			A.idx
+			,A.sbjt
+			,A.ctnt
+			,A.atch_file_1
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_1) atch_file_1_nm
+			,A.atch_file_2
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_2) atch_file_2_nm
+			,A.atch_file_3
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_3) atch_file_3_nm
+			,A.atch_file_4
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_4) atch_file_4_nm
+			,A.atch_file_5
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_5) atch_file_5_nm
+			,A.repl
+			,A.ask_sts
+			,CASE 
+				WHEN A.ask_sts = '1' THEN '문의중'
+				ELSE '답변완료'
+			END AS ask_sts_nm
+			,A.read_cnt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd hh24:mi') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd hh24:mi') updt_dt_char
+			,A.reg_user_id
+			,USR.name reg_user_name
+		FROM 
+			kcgbd.t_inquire A
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = A.reg_user_id
+			AND idx = #{idx}
+	</select>
+	
+	<insert id="insertInfo" parameterType="cmmnMap">
+	/* communi.mng.inquire.insertInfo */
+		INSERT INTO kcgbd.t_inquire(
+			idx
+			,sbjt
+			,ctnt
+			,atch_file_1
+			,atch_file_2
+			,atch_file_3
+			,atch_file_4
+			,atch_file_5
+			,repl
+			,ask_sts
+			,read_cnt
+			,reg_dt
+			,updt_dt
+			,reg_user_id
+			,updt_user_id
+		)VALUES(
+			#{idx}
+			,#{sbjt}
+			,#{ctnt}
+			,#{atch_file_1}
+			,#{atch_file_2}
+			,#{atch_file_3}
+			,#{atch_file_4}
+			,#{atch_file_5}
+			,#{repl}
+			,#{ask_sts}'
+			,'0'
+			,NOW()
+			,NOW()
+			,#{user_id}
+			,#{user_id}
+		)
+	</insert>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* communi.mng.inquire.updateInfo */
+		UPDATE kcgbd.t_inquire
+		SET 
+			sbjt = #{sbjt}
+			,ctnt = #{ctnt}
+			,atch_file_1 = #{atch_file_1}
+			,atch_file_2 = #{atch_file_2}
+			,atch_file_3 = #{atch_file_3}
+			,atch_file_4 = #{atch_file_4}
+			,atch_file_5 = #{atch_file_5}
+			,repl = #{repl}
+			,ask_sts = #{ask_sts}
+			,updt_dt = NOW()
+			,updt_user_id = #{user_id}
+		WHERE idx = #{idx}
+	</update>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	/* communi.mng.inquire.deleteInfo */
+		DELETE FROM kcgbd.t_inquire
+		WHERE idx = #{idx}
+	</delete>
+</mapper>

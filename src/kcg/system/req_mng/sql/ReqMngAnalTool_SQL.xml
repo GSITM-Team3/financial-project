@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='req.mng.anal.tool'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* req.mng.anal.tool.getList */
+		SELECT
+			 A.idx
+			,A.reg_user_id
+			,USR.name reg_user_name
+			,A.sbjt
+			,A.anal_tool_gbn
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'ANALTOOL' AND code_id = A.anal_tool_gbn) anal_tool_gbn_nm
+			,A.req_perd_strt_dtm
+			,A.req_perd_end_dtm
+			,A.req_resn
+			,A.use_purp
+			,A.req_sts
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'APRVCD' AND code_id = A.req_sts) req_sts_nm
+			,A.cmnt
+			,A.reg_dt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd hh24:mi') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd hh24:mi') updt_dt_char
+			,(select tool_url from kcgbd.t_anal_tool_info_mapping where req_tool_idx = a.idx) as tool_info
+		FROM 
+			kcgbd.t_anal_tool_req A
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = A.reg_user_id
+		<if test='search_val != ""'>
+			<if test='search_nm == "sbjt"'>
+				AND A.SBJT like concat('%',#{search_val},'%')
+			</if>
+			<if test='search_nm == "reg_user_name"'>
+				AND USR.name like concat('%',#{search_val},'%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* req.mng.anal.tool.getInfo */
+		SELECT
+			 A.idx
+			,A.reg_user_id
+			,USR.name reg_user_name
+			,A.sbjt
+			,A.anal_tool_gbn
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'ANALTOOL' AND code_id = A.anal_tool_gbn) anal_tool_gbn_nm
+			,A.req_perd_strt_dtm
+			,A.req_perd_end_dtm
+			,A.req_resn
+			,A.use_purp
+			,A.req_sts
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'APRVCD' AND code_id = A.req_sts) req_sts_nm
+			,A.cmnt
+			,A.reg_dt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd hh24:mi') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd hh24:mi') updt_dt_char
+			,(select tool_url from kcgbd.t_anal_tool_info_mapping where req_tool_idx = a.idx) as tool_url
+		FROM 
+			kcgbd.t_anal_tool_req A
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = A.reg_user_id
+			AND A.idx = #{idx}
+	</select>
+	
+	<select id="getToolInfoList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* req.mng.anal.tool.getToolInfoList */
+		SELECT
+			 tool_url
+			 ,A.req_tool_idx
+			 ,A.use_yn
+		FROM 
+			kcgbd.t_anal_tool_info_mapping A
+	</select>
+	
+	<select id="getToolInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* req.mng.anal.tool.getToolInfo */
+		SELECT
+			 tool_url
+			 ,A.req_tool_idx
+			 ,A.use_yn
+		FROM 
+			kcgbd.t_anal_tool_info_mapping A
+		WHERE 1=1
+		<if test='tool_url != ""'>
+			AND A.tool_url = #{tool_url}
+		</if>
+		<if test='req_tool_idx != ""'>
+			AND A.req_tool_idx = #{req_tool_idx}
+		</if>
+		
+	</select>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* req.mng.anal.tool.updateInfo */
+		UPDATE 
+			kcgbd.t_anal_tool_req
+		SET 
+			req_sts = #{req_sts}
+			,cmnt = #{cmnt}
+			,updt_user_id = #{user_id}
+			,updt_dt = now()
+		WHERE 1=1
+		 	AND idx= #{idx}
+	</update>
+	
+	<update id="updateToolInfo" parameterType="cmmnMap">
+	/* req.mng.anal.tool.updateToolInfo */
+		UPDATE 
+			kcgbd.t_anal_tool_info_mapping
+		SET 
+			req_tool_idx = #{req_tool_idx}
+			,use_yn = #{use_yn}
+		WHERE 1=1
+		 	AND tool_url = #{tool_url}
+	</update>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	/* req.mng.anal.tool.deleteInfo */
+		DELETE FROM kcgbd.t_anal_tool_req
+		WHERE 1=1
+		 	AND idx= #{idx}
+	</delete>
+	
+	<update id="updtStatus" parameterType="cmmnMap">
+	/* req.mng.anal.tool.updtStatus */
+		UPDATE 
+			kcgbd.t_anal_tool_req
+		SET 
+			req_sts = #{req_sts}
+			,updt_user_id = #{user_id}
+			,updt_dt = now()
+		WHERE 1=1
+		 	AND idx= #{idx}
+	</update>
+	
+</mapper>

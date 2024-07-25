@@ -1,0 +1,170 @@
+@charset "utf-8";
+
+/*
+ @font-face {
+  font-family: "Nanum Square";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../font/NanumSquare/NanumSquareR.eot");
+  src: local("Nanum Square Regular"),
+       local("NanumSquareR"),
+       url("../font/NanumSquare/NanumSquareR.eot?#iefix") format("embedded-opentype"),
+       url("../font/NanumSquare/NanumSquareR.woff2") format("woff2"),
+       url("../font/NanumSquare/NanumSquareR.woff") format("woff"),
+       url("../font/NanumSquare/NanumSquareR.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Nanum Square";
+
+  font-weight: 700;
+  src: url(../font/NanumSquare/NanumSquareB.eot);
+  src: local("Nanum Square Bold"),
+       local("NanumSquareB"),
+       url("../font/NanumSquare/NanumSquareB.eot?#iefix") format("embedded-opentype"),
+       url("../font/NanumSquare/NanumSquareB.woff2") format("woff2"),
+       url("../font/NanumSquare/NanumSquareB.woff") format("woff"),
+       url("../font/NanumSquare/NanumSquareB.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "NanumBarunGothic";
+    src: url("../font/NanumBarunGothic/NanumBarunGothicUltraLight.eot");
+    src: url("../font/NanumBarunGothic/NanumBarunGothicUltraLight.eot?#iefix") format("embedded-opentype"),
+        url("../font/NanumBarunGothic/NanumBarunGothicUltraLight.woff2") format("woff2"),
+        url("../font/NanumBarunGothic/NanumBarunGothicUltraLight.woff") format("woff");
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "NanumBarunGothic";
+    src: url("../font/NanumBarunGothic/NanumBarunGothicLight.eot");
+    src: url("../font/NanumBarunGothic/NanumBarunGothicLight.eot?#iefix") format("embedded-opentype"),
+        url("../font/NanumBarunGothic/NanumBarunGothicLight.woff2") format("woff2"),
+        url("../font/NanumBarunGothic/NanumBarunGothicLight.woff") format("woff");
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "NanumBarunGothic";
+    src: url("../font/NanumBarunGothic/NanumBarunGothic.eot");
+    src: url("../font/NanumBarunGothic/NanumBarunGothic.eot?#iefix") format("embedded-opentype"),
+        url("../font/NanumBarunGothic/NanumBarunGothic.woff2") format("woff2"),
+        url("../font/NanumBarunGothic/NanumBarunGothic.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "NanumBarunGothic";
+    src: url("../font/NanumBarunGothic/NanumBarunGothicBold.eot");
+    src: url("../font/NanumBarunGothic/NanumBarunGothicBold.eot?#iefix") format("embedded-opentype"),
+        url("../font/NanumBarunGothic/NanumBarunGothicBold.woff2") format("woff2"),
+        url("../font/NanumBarunGothic/NanumBarunGothicBold.woff") format("woff");
+    font-weight: 500;
+    font-style: normal;
+}
+*/
+/* ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	Basic	
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+* {border:0}
+* {border:0;outline:none }
+/* * {font-family: 'NanumBarunGothic','Nanum Square',sans-serif !important;} */
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, button, abbr, acronym, address, code, del, dfn, em, img, strong, sub, sup, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, hr
+{box-sizing: content-box; }
+
+body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,button,select{margin:0; padding:0; }
+ul,ol,dl,dt,dd,li,button{margin:0;padding:0;list-style:none}
+button{cursor: pointer; outline: none; border: 0;}
+input, button{outline: none;}
+input:focus {
+   outline: none;
+}
+#gis_wrap_map select{border:0; }
+
+body{
+	line-height:1.1;
+}
+select{
+	padding:0px;
+	height:18px;
+	border:none;
+	background:none;
+} 
+
+/* 초기 한글사용(한글 및 중국, 일본 사이트용) */
+input[type="text"],
+input[type="password"],
+textarea{ime-mode:active;}
+
+/* 슬라이더 체크박스 */
+.input_switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 16px;
+	margin-top: 4px;
+}
+
+.input_switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.input_slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.input_slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .input_slider {
+  background-color: #1d7fff;
+}
+
+input:focus + .input_slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .input_slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.input_slider.round {
+  border-radius: 34px;
+}
+
+.input_slider.round:before {
+  border-radius: 50%;
+}
+
+/* 공통 css */
+.hide{display: none!important;}
+.fl_r{float: right;}
+.fl_l{float: left;}

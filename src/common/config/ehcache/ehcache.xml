@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" updateCheck="false"
+    monitoring="autodetect" dynamicConfig="true">
+ 
+    <diskStore path="java.io.tmpdir" />
+
+	<!-- 
+		clearOnFlush : flush() 메소드가 실행 될 때 메모리 캐시가 바로 살제 할지 여부, 기본적으로 true 이며 바로 삭제됨.
+		copyOnRead: 읽기때 캐시 요소를 복사 할 지 여부
+		copyOnWrite: 캐시 객체 쓸 경우 위한 복사 할지 여부
+   			- copyOnRead와 Write는 캐쉬로 받아온 객체에 수정이 일어나는 경우 사용한다.
+   			- 캐시된 객체에 수정이 일어나면 참조호출로 인해 그 뒤에 호출되는 모든 객체가 수정 영향이 중첩되어 발생하므로 주의 필요
+		diskAccessStripes : 디스크 퍼포먼스를 조정하기 위한 스트라핑 설정
+		diskExpiryThreadIntervalSeconds : 디스크에 저장된 캐시들에 대해 만료된 항목를 제거하기 위한 쓰레드의 수행 시간 간격을 초 단위로 지정한다. 기본값은 120 이다.
+		diskPersistent : VM이 재 가동할 때 디스크 저장소에 캐싱된 객체를 저장할지의 여부를 지정한다. 기본값은 false이다.
+		diskSpoolBufferSizeMB : 디스크 캐시에 쓰기 모드로 들어갈때, 사용될 비동기 모드의 스폴 버퍼 크기 설정, OutOfMemory 에러가 발생 시 수치를 낮추도록 한다.
+		eternal : 시간설정에 대한 무시 설정 (boolean). 이 값이 true이면 timeout 관련 설정은 무시되고, Element가 캐시에서 삭제되지 않는다.
+		logging: 로깅 사용 여부
+		maxBytesLocalHeap: 최대 로컬 힙메모리 사용량 설정, 1k, 1m, 1g 해당 옵션을 사용할 경우 maxEntriesLocalHeap 설정은 사용 할 수 없음.
+		maxBytesLocalOffHeap: 로컬 VM의 최대 offHeap 사용량을 설정 
+		maxBytesLocalDisk: maxBytesLocalHeap에 설정된 캐시 사용 이후에 대한 디스크 스토리지의 한계를 설정
+		maxElementsInMemory : 메모리에 저장될 수 있는 객체의 최대 개수
+		maxElementsOnDisk : 디스크 캐시에 저장 될 최대 객체의 수를 지정
+		maxEntriesLocalHeap : 힙메모리에 유지될 최대 객체 수
+		maxEntriesLocalDisk : 로컬 디스크에 유지될 최대 객체 수
+		maxEntriesInCache : Terracotta의 분산 캐시에서만 사용 가능하며, 클러스터링에 저장 할 수 있는 최대 캐시 수를 설정
+		maxMemoryOffHeap: Off-heap 메모리 사용의 최대 량을 설정
+		memoryStoreEvictionPolicy : 객체의 개수가 maxElementsInMemory에 도달했을 때,메모리에서 객체를 어떻게 제거할 지에 대한 정책을 지정한다. 기본값은 LRU이다. FIFO와 LFU도 지정할 수 있다.
+		name : 캐시의 이름
+		overflowToDisk : 메모리에 저장된 객체 개수가 maxElementsInMemory에서 지정한 값에 다다를 경우 디스크에 오버플로우 되는 객체는 저장할 지의 여부를 지정한다.
+		overflowToOffHeap: Off-heap 메모리 사용을 설정을 사용 할 수 있으며 JAVA의 GC에 영향을 주지 않는다. 엔터프라이즈 버전에서만 사용가능 하며,   maxEntriesLocalHeap 설정을 최소한 100 요소까지 권정하며 OffHeap를 사용하는 경우 성능이 저하될수 있음.
+		timeToIdleSeconds : Element가 지정한 시간 동안 사용(조회)되지 않으면 캐시에서 제거된다. 이 값이 0인 경우 조회 관련 만료 시간을 지정하지 않는다. 기본값은 0이다.
+		timeToLiveSeconds : Element가 존재하는 시간. 이 시간이 지나면 캐시에서 제거된다. 이 시간이 0이면 만료 시간을 지정하지 않는다. 기본값은 0이다.
+		transactionalMode : copyOnRead , copyOnWrite 시 트렉젝션 모드를 설정
+		statistics : JMX 통계정보 갱신 옵션
+		
+		# persistence strategy 의 옵션들
+		localTempSwap : 임시 Local Disk를 사용할 수 있도록 함. 이 옵션은 캐시동작중 저장을 위한 Disk 영역을 지원하지만 영속적이지 않다. 즉 재시작을 할 경우 Disk 영역의 캐시데이타를 모두 지운다.
+		localRestartable : localTempSwap과 반대로 재시작시 모든 캐시객체들을(힙메모리나 힙이 아닌 메모리에 있는 캐시객체포함) 모두 디스크에 복사를 한뒤, 다시 해당캐시를 사용할 수 있도록 한다.
+		none : 캐시객체를 저장을 위한 디스크사용을 금지한다. 캐시저장은 오직 메모리만 사용할 수 있도록 한다.
+		distributed : Terracotta의 분산 캐시을 위한 설정이다.
+	 -->
+	 
+	<cache name="CmmnCdCache" 
+		maxEntriesLocalHeap="1000"
+		maxEntriesLocalDisk="1000"
+		eternal="false" 
+		diskSpoolBufferSizeMB="10"
+		timeToLiveSeconds="1800"
+		memoryStoreEvictionPolicy="LRU">
+	</cache>
+ 
+</ehcache>

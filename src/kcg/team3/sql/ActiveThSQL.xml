@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.schedule_mng'>
+
+   <!-- 일정 조회 -->
+   <select id="getAllSchedules" resultType="kcg.team3.vo.ScheduleTh">
+      SELECT 
+         sche_code AS scheCode, 
+         user_id AS userId, 
+         sche_content AS scheContent, 
+         sche_start_date AS scheStartDate, 
+         sche_end_date AS scheEndDate
+      FROM public.tb3_schedule
+   </select>
+
+   <!-- 일정 추가 -->
+   <insert id="insertSchedule" parameterType="kcg.team3.vo.ScheduleTh">
+      /* system.schedule_mng.insertSchedule */
+
+      INSERT INTO public.tb3_schedule (user_id, sche_content, sche_start_date, sche_end_date)
+      VALUES (
+         #{userId},
+         #{scheContent},
+         #{scheStartDate},
+         #{scheEndDate}
+      )
+   </insert>
+   
+   <!-- 일정 수정 -->
+   <update id="updateSchedule">
+   /* system.schedule_mng.updateSchedule */
+   
+       UPDATE tb3_schedule
+       SET sche_content = #{scheContent},
+           sche_start_date = #{scheStartDate},
+           sche_end_date = #{scheEndDate}
+       WHERE sche_code = #{scheCode}
+   </update>
+   
+   <!-- 일정 삭제 -->
+   <delete id="deleteSchedule">
+   /* system.schedule_mng.deleteSchedule */
+   
+       DELETE FROM tb3_schedule
+       WHERE sche_code = #{scheCode}
+   </delete>
+
+   </mapper>

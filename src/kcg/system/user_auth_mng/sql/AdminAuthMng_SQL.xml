@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.admin_auth_mng'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.admin_auth_mng.getList */
+		SELECT
+			USR.user_id
+			,ATH.auth_nm
+			,ATH.auth_cd
+			,ATH.reg_dt
+		FROM
+			kcgbd.t_auth ATH
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = ATH.auth_nm
+			AND ATH.admin_yn = 'Y'
+			AND ATH.auth_cd != 'admin'
+		<if test='search_val != ""'>
+			<if test='search_nm == "auth_nm"'>
+				AND ATH.auth_nm like concat('%',#{search_val},'%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.admin_auth_mng.getInfo */
+		SELECT
+			USR.user_id
+			,ATH.auth_nm
+			,ATH.auth_cd
+			,ATH.reg_dt
+		FROM
+			kcgbd.t_auth ATH
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = ATH.auth_nm
+			AND USR.user_id = #{auth_nm}
+			AND ATH.admin_yn = 'Y'
+	</select>
+
+	<insert id="insertInfo_user" parameterType="cmmnMap">
+	/* system.admin_auth_mng.insertInfo_user */
+		INSERT INTO kcgbd.t_user (
+			user_id
+			,auth_cd
+			,iam_yn
+			,name
+			,del_yn
+			,user_pw
+			,reg_dt
+		) VALUES (
+			#{auth_nm}
+			,#{auth_nm}
+			,'N'
+			,#{name}
+			,'N'
+			,#{user_pw}
+			,now()
+		)
+	</insert>
+
+	<insert id="insertInfo_auth" parameterType="cmmnMap">
+	/* system.admin_auth_mng.insertInfo_auth */
+		INSERT INTO kcgbd.t_auth (
+			auth_cd
+			,auth_nm
+			,admin_yn
+			,reg_dt
+			,updt_dt
+			,reg_user_id
+			,updt_user_id
+		) VALUES (
+			#{auth_nm}
+			,#{auth_nm}
+			,'Y'
+			,now()
+			,now()
+			,#{user_id}
+			,#{user_id}
+		)
+	</insert>
+	
+	<update id="delete_user" parameterType="cmmnMap">
+	/* system.admin_auth_mng.delete_user */
+		UPDATE kcgbd.t_user SET
+			del_yn = 'Y'
+		WHERE 1=1
+			AND user_id = #{auth_nm}
+	</update>
+	
+	<delete id="delete_auth" parameterType="cmmnMap">
+	/* system.admin_auth_mng.delete_auth */
+		DELETE FROM kcgbd.t_auth
+		WHERE 1=1
+			AND auth_nm = #{auth_nm}
+	</delete>
+	
+	<select id="getAuthMenuMappingList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.admin_auth_mng.getAuthMenuMappingList */
+		SELECT
+			mnu.menu_url
+			,mnu.menu_nm
+			,mnu.menu_note
+			,CASE 
+				WHEN amm.menu_url IS NULL
+				THEN 'N'
+				WHEN amm.use_yn = 'N'
+				THEN 'N'
+				ELSE 'Y'
+			 END use_yn
+		FROM
+			kcgbd.t_menu mnu
+			LEFT JOIN kcgbd.t_auth_menu_mapping amm ON 1=1 
+				AND mnu.menu_url = amm.menu_url 
+				AND amm.auth_cd = #{auth_nm}
+		WHERE 1=1
+			AND mnu.admin_yn = 'Y'
+		ORDER BY mnu.menu_url
+	</select>
+	
+	<delete id="deleteAuthMenuMappingInfo" parameterType="cmmnMap">
+	/* system.admin_auth_mng.deleteAuthMenuMappingInfo */
+		DELETE FROM kcgbd.t_auth_menu_mapping
+		WHERE 1=1
+			AND auth_cd = #{auth_nm}
+	</delete>
+	
+	<insert id="insertAuthMenuMappingInfo" parameterType="cmmnMap">
+	/* system.admin_auth_mng.insertAuthMenuMappingInfo */
+		INSERT INTO kcgbd.t_auth_menu_mapping (
+			auth_cd
+			,menu_url
+			,use_yn
+			,c_yn
+			,r_yn
+			,u_yn
+			,d_yn
+		) VALUES (
+			#{auth_nm}
+			,#{menu_url}
+			,#{use_yn}
+			,#{use_yn}
+			,#{use_yn}
+			,#{use_yn}
+			,#{use_yn}
+		)
+	</insert>
+	
+	<select id="chkExist" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.admin_auth_mng.chkExist */
+		SELECT
+			count(*) cnt
+		FROM
+			kcgbd.t_user
+		WHERE 1=1
+			AND user_id = #{auth_nm}
+	</select>
+	
+	<update id="initPw" parameterType="cmmnMap">
+	/* system.admin_auth_mng.initPw */
+		UPDATE kcgbd.t_user SET
+			user_pw = #{user_pw}
+		WHERE 1=1
+			AND user_id = #{auth_nm}
+	</update>
+
+</mapper>

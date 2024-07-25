@@ -1,0 +1,78 @@
+<included>
+
+	<property name="directory" value="/home/hnlsystem/logs" />
+	
+	<appender name="SVC_ROUTING" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+			<evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+				<expression>
+				<![CDATA[
+					// MDC 에 LOG_SVC_CD 가 없으면 로그를 남기지 않는다.
+					if(!mdc.containsKey("LOG_SVC_CD")) {
+						return false;
+					}
+					// MDC 의 LOG_SVC_LEVEL 보다 LEVEL 이 같거나 높을때만 로그를 남긴다.
+					if(mdc.get("LOG_SVC_LEVEL") != null && event.getLevel().toInteger() >= Integer.parseInt((String)mdc.get("LOG_SVC_LEVEL"))){
+						return true;
+					}
+					return false;
+				]]>
+				</expression>
+			</evaluator>
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>ACCEPT</OnMatch>
+		</filter>
+		<discriminator>
+			<key>LOG_SVC_CD</key>
+			<defaultValue>no_log</defaultValue>
+		</discriminator>
+		<sift>
+			<appender class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<file>${directory}/${LOG_SVC_CD}/${LOG_SVC_CD}_test.log</file>
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<fileNamePattern>${directory}/${LOG_SVC_CD}/${LOG_SVC_CD}_test_%d{yyyy-MM-dd}.log</fileNamePattern>	
+				</rollingPolicy>
+				<encoder>
+					<pattern>[%X{USER_ID}] %d %-5level [%c] %m%n</pattern>
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+			<evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+				<expression>
+				<![CDATA[
+					if(event.getLevel().toInteger() >= Level.DEBUG_INT){
+						return true;
+					}
+					return false;
+				]]>
+				</expression>
+			</evaluator>
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>ACCEPT</OnMatch>
+		</filter>
+		<encoder>
+			<pattern>%d %5p [%c] %m%n</pattern>
+		</encoder>
+	</appender>
+  
+	<logger name="org" level="ERROR"/>
+	<logger name="jdbc.sqlonly" level="DEBUG"/>
+	<logger name="common.utils.mybatis_paginator" level="ERROR"/>
+	<logger name="com.zaxxer.hikari" level="ERROR"/>
+	<logger name="jdbc.audit" level="ERROR"/>
+	<logger name="jdbc.connection" level="ERROR"/>
+	<logger name="jdbc.resultset" level="ERROR"/>
+	<logger name="jdbc.sqltiming" level="ERROR"/>
+	<logger name="jdbc.resultsettable" level="ERROR"/>
+	<logger name="log4jdbc" level="ERROR"/>
+  
+	<root level="TRACE">
+		<appender-ref ref="STDOUT" /> 
+		<appender-ref ref="SVC_ROUTING" /> 
+	</root>
+  
+</included>

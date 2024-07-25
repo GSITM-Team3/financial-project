@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kcg.team3">
+
+	<!-- 설계 리스트 조회 쿼리문 -->
+	<select id="getDesignList" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getDesignList */
+		SELECT plan_code, prod_code,
+		user_id,
+		cust_code, plan_amt, plan_term, plan_state,
+		plan_created_at,
+		plan_updated_at
+		FROM
+		public.tb3_plan
+		ORDER BY
+		plan_code DESC
+	</select>
+
+	<!-- 설계 리스트 조회 페이징 쿼리문 -->
+	<select id="getDesignListWithPaging" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getDesignListWithPaging */
+		SELECT plan_code,
+		prod_code,
+		user_id,
+		cust_code, plan_amt, plan_term, plan_state,
+		plan_created_at,
+		plan_updated_at
+		FROM
+		public.tb3_plan
+		ORDER BY
+		plan_code
+		DESC
+		LIMIT #{pageSize} OFFSET #{offset}
+	</select>
+
+	<!-- 설계 리스트 조회 페이징 필터링 쿼리문 / 240719 -->
+	<select id="getDesignListWithFilterAndPaging"
+		parameterType="cmmnMap" resultType="cmmnMap">
+		/* kcg.team3.getDesignListWithFilterAndPaging */
+		SELECT
+		plan_code,
+		prod_code,
+		user_id,
+		cust_code,
+		plan_amt,
+		plan_term,
+		plan_state,
+		plan_created_at,
+		plan_updated_at
+		FROM
+		public.tb3_plan
+		WHERE 1=1
+		<if test="user_id != null and user_id != ''">
+			AND user_id = #{user_id}
+		</if>
+		<if test="cust_code != null and cust_code != ''">
+			AND cust_code = #{cust_code}
+		</if>
+		<if test="prod_code != null and prod_code != ''">
+			AND prod_code = #{prod_code}
+		</if>
+		ORDER BY
+		plan_code DESC
+		LIMIT #{pageSize} OFFSET #{offset}
+
+	</select>
+
+	<!-- 필터링 데이터 -->
+	<select id="getFilteredDesignCount" parameterType="cmmnMap"
+		resultType="int">
+		select count(*) from public.tb3_plan
+		where 1=1
+		<if test="user_id != null and user_id != ''">
+			AND user_id = #{user_id}
+		</if>
+		<if test="cust_code != null and cust_code != ''">
+			AND cust_code = #{cust_code}
+		</if>
+		<if test="prod_code != null and prod_code != ''">
+			AND prod_code = #{prod_code}
+		</if>
+	</select>
+
+
+	<!-- 프로모션 상품 리스트 조회 -->
+	<select id="getPromotionProdList" resultType="map">
+		/*
+		kcg.team3.getPromotionProdList */
+		SELECT prod_code, prod_name,
+		prod_pay_cy, prod_air, prod_tax_type,
+		CASE
+		WHEN prod_name LIKE '%예금%'
+		THEN 'deposit'
+		WHEN prod_name LIKE '%적금%' THEN 'savings'
+		WHEN prod_name
+		LIKE '%챌린지%' THEN 'challenge'
+		ELSE 'other'
+		END AS prod_type
+		FROM
+		public.tb3_product
+	</select>
+
+	<!-- 특정 상품 조회 -->
+	<select id="getProductDetails" parameterType="string"
+		resultType="map">
+		/* kcg.team3.getProductDetails */
+		SELECT prod_code,
+		prod_name, prod_pay_cy, prod_air, prod_tax_type
+		FROM public.tb3_product
+		WHERE prod_name = #{productName}
+	</select>
+
+	<!-- 고객 모달 조회 -->
+	<select id="getCustomerList" resultType="map">
+		/*
+		kcg.team3.getCustomerList */
+		SELECT cust_code, cust_name,
+		cust_phonenum, cust_birth, cust_gen, cust_type,
+		user_id
+		FROM
+		public.tb3_cust
+	</select>
+
+	<!-- 설계 저장 -->
+	<insert id="savePlan" parameterType="cmmnMap">
+		<!-- kcg.team3.savePlan -->
+		INSERT INTO public.tb3_plan (
+		prod_code,
+		user_id,
+		cust_code,
+		plan_amt,
+		plan_term,
+		plan_state,
+		plan_created_at,
+		plan_updated_at
+		)
+		VALUES (
+		CAST(#{prod_code} AS numeric(15)),
+		#{user_id},
+		CAST(#{cust_code} AS
+		numeric(15)),
+		CAST(#{plan_amt} AS numeric(15)),
+		#{plan_term},
+		#{plan_state},
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP
+		)
+	</insert>
+
+	<!-- 메인용 top 3 쿼리문 -->
+	<select id="getUserForMainLimit3" resultType="cmmnMap">
+		/*
+		kcg.team3.getUserForMainLimit3 */
+		SELECT user_id, COUNT(*) AS
+		plan_state_2_count
+		FROM tb3_plan
+		WHERE plan_state = '2'
+		GROUP BY user_id
+		ORDER BY plan_state_2_count DESC
+		LIMIT 3
+	</select>
+	
+	<!-- 설계 세부정보와 관련된 데이터 조회 쿼리 -->
+    <select id="getDesignDetailByPlanCode" parameterType="int" resultType="cmmnMap">
+        SELECT
+            p.plan_code,
+            p.plan_amt,
+            p.plan_term,
+            p.plan_state,
+            c.cust_name,
+            c.cust_birth,
+            c.cust_phonenum,
+            c.cust_gen,
+            c.cust_type,
+            u.user_id AS manager_name,
+            pr.prod_name,
+            pr.prod_pay_cy,
+            pr.prod_air,
+            pr.prod_tax_type
+        FROM
+            public.tb3_plan p
+            JOIN public.tb3_cust c ON p.cust_code = c.cust_code
+            JOIN public.tb3_product pr ON p.prod_code = pr.prod_code
+            JOIN kcgbd.t_user u ON p.user_id = u.user_id
+        WHERE
+            p.plan_code = #{planCode}
+    </select>
+    
+    <!-- 설계 수정 -->
+    <update id="updatedPlan" parameterType="cmmnMap">
+		/* kcg.team3.updatedPlan */
+		UPDATE  public.tb3_plan 
+		SET 	plan_state = #{plan_state},
+				plan_updated_at = #{plan_updated_at}
+		WHERE	plan_code = CAST(#{plan_code} AS INTEGER)
+	</update>
+
+
+</mapper>

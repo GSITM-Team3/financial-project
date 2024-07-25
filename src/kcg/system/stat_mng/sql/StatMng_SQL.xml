@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='stat.mng.dashboard'>
+
+	<select id="getStatisticData" parameterType="cmmnMap" resultType="cmmnMap">
+	/* stat.mng.dashboard.getStatisticData */
+		SELECT 
+			A.statistic_date
+			,SUM(A.visit_cnt) visit_cnt
+			,SUM(A.reg_cnt) reg_cnt
+			,SUM(A.req_anal_tool_cnt) req_anal_tool_cnt
+			,SUM(A.req_data_anal_cnt) req_data_anal_cnt
+			,SUM(A.req_data_collect_cnt) req_data_collect_cnt
+			,SUM(A.req_dnld_cnt) req_dnld_cnt
+			,SUM(A.share_anal_idea_cnt) share_anal_idea_cnt
+			,SUM(A.share_data_visual_cnt) share_data_visual_cnt
+			,SUM(A.share_use_example_cnt) share_use_example_cnt
+			,SUM(A.communi_bigdata_cnt) communi_bigdata_cnt
+			,SUM(A.communi_inquire_cnt) communi_inquire_cnt
+			,SUM(A.communi_lib_cnt) communi_lib_cnt
+			,SUM(A.communi_news_cnt) communi_news_cnt
+		FROM
+			kcgbd.t_statistic A
+		WHERE 1=1
+			AND A.statistic_date BETWEEN #{from_date} AND #{to_date}
+		GROUP BY A.statistic_date
+		ORDER BY statistic_date
+	</select>
+	
+	<select id="getReqStat" parameterType="cmmnMap" resultType="cmmnMap">
+	/* stat.mng.dashboard.getReqStat */
+		SELECT
+			SUM(req_anal_tool_cnt) req_anal_tool_cnt
+			,SUM(req_data_anal_cnt) req_data_anal_cnt
+			,SUM(req_data_collect_cnt) req_data_collect_cnt
+			,SUM(req_dnld_cnt) req_dnld_cnt
+		FROM
+			kcgbd.t_statistic
+		WHERE 1=1
+			AND statistic_date BETWEEN #{from_date} AND #{to_date}
+	</select>
+
+	<select id="getKeywordStat" parameterType="cmmnMap" resultType="cmmnMap">
+	/* stat.mng.dashboard.getKeywordStat */
+		SELECT 
+			A.keyword
+			,SUM(A.keyword_cnt) keyword_cnt
+		FROM
+			kcgbd.t_keyword_log A
+		WHERE 1=1
+			AND A.reg_date BETWEEN #{from_date} AND #{to_date}
+		GROUP BY A.keyword
+		ORDER BY keyword_cnt desc
+		LIMIT 10
+	</select>
+
+	<select id="getStatisticDataTotal" parameterType="cmmnMap" resultType="cmmnMap">
+	/* stat.mng.dashboard.getStatisticDataTotal */
+		SELECT 
+			SUM(A.visit_cnt) visit_cnt
+			,SUM(A.reg_cnt) reg_cnt
+			,SUM(A.req_anal_tool_cnt) req_anal_tool_cnt
+			,SUM(A.req_data_anal_cnt) req_data_anal_cnt
+			,SUM(A.req_data_collect_cnt) req_data_collect_cnt
+			,SUM(A.req_dnld_cnt) req_dnld_cnt
+			,SUM(A.share_anal_idea_cnt) share_anal_idea_cnt
+			,SUM(A.share_data_visual_cnt) share_data_visual_cnt
+			,SUM(A.share_use_example_cnt) share_use_example_cnt
+			,SUM(A.communi_bigdata_cnt) communi_bigdata_cnt
+			,SUM(A.communi_inquire_cnt) communi_inquire_cnt
+			,SUM(A.communi_lib_cnt) communi_lib_cnt
+			,SUM(A.communi_news_cnt) communi_news_cnt
+		FROM
+			kcgbd.t_statistic A
+		WHERE 1=1
+			AND A.statistic_date BETWEEN #{from_date} AND #{to_date}
+	</select>
+	
+	
+</mapper>

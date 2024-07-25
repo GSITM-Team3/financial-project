@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='login'>
+
+	<select id="geUsertInfo" parameterType="cmmnMap"
+		resultType="userInfoVO">
+		/* login.geUsertInfo */
+		SELECT
+		USR.auth_cd
+		,USR.user_id
+		,USR.iam_yn
+		,USR.status_cd
+		,USR.name
+		,USR.jikgub_cd
+		,USR.jikgub_nm
+		,USR.dept
+		,USR.tdept_nm
+		,USR.email
+		,USR.pic_mbl_telno
+		,USR.gis_auth
+		,USR.del_yn AS delYn
+		,USR.user_pw AS userPw
+		FROM kcgbd.t_user USR
+		WHERE 1=1
+		AND USR.del_yn =
+		'N'
+		AND USR.user_id = #{user_id}
+		AND USR.iam_yn = #{iam_yn}
+	</select>
+
+	<select id="findUserId" resultType="string">
+		/* login.findUserId */
+
+		SELECT
+		user_id as userId
+		FROM
+		kcgbd.t_user
+
+		WHERE 1=1
+		<if test="userNm != null and userNm != ''">
+			AND name = #{userNm}
+		</if>
+		<if test="mblTelno != null and mblTelno != ''">
+			AND mbl_telno = #{mblTelno}
+		</if>
+		<if test="jncmpYmd != null and jncmpYmd != ''">
+			AND jncmp_Ymd = #{jncmpYmd}
+		</if>
+		<if test="emlAddr != null and emlAddr != ''">
+			AND email = #{emlAddr}
+		</if>
+	</select>
+
+	<select id="findUserPw" resultType="string">
+		/* login.findUserPw */
+
+		SELECT
+		user_pw as userPw
+		FROM
+		kcgbd.t_user
+
+		WHERE 1=1
+		<if test="userNm != null and userNm != ''">
+			AND name = #{userNm}
+		</if>
+		<if test="mblTelno != null and mblTelno != ''">
+			AND mbl_telno = #{mblTelno}
+		</if>
+		<if test="jncmpYmd != null and jncmpYmd != ''">
+			AND jncmp_Ymd = #{jncmpYmd}
+		</if>
+		<if test="emlAddr != null and emlAddr != ''">
+			AND email = #{emlAddr}
+		</if>
+		<if test="userId != null and userId != ''">
+			AND user_id = #{userId}
+		</if>
+	</select>
+
+	<select id="geUsertInfoFromIAm" parameterType="cmmnMap"
+		resultType="userInfoVO">
+		/* login.geUsertInfoFromIAm */
+		SELECT
+		USR.isextra
+		,USR.userid
+		AS user_id
+		,USR.resno
+		,USR.name
+		,USR.cname
+		,USR.ename
+		,USR.sexcd
+		,USR.birthdt
+		,USR.lunaryn
+		,USR.curzipcd
+		,USR.curzipaddr
+		,USR.curaddr
+		,USR.hometel
+		,USR.officetel
+		,USR.admintel
+		,USR.handphone
+		,USR.email
+		,USR.officefax
+		,USR.toporgcd
+		,USR.dept
+		,USR.dept_mogahacd AS deptMogahacd
+		,USR.rdept_mogahacd AS rdeptMogahacd
+		,USR.fdeptnm
+		,USR.tdeptnm AS
+		tdept_nm
+		,USR.ldeptnm
+		,USR.sdeptnm
+		,USR.buildid
+		,USR.gwip
+		,USR.jikrankcd
+		,USR.jikrankseq
+		,USR.jikgubcd AS jikgub_cd
+		,USR.jikgubnm AS jikgub_nm
+		,USR.statuscd AS status_cd
+		FROM AO_IAM.VAOI_PPSS_USER_MAP_BD USR
+		WHERE
+		1=1
+		AND USR.userid = #{user_id}
+	</select>
+
+	<select id="getUserAuthInfo" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* login.getUserAuthInfo */
+		SELECT
+		auth.auth_cd
+		,auth.admin_yn
+		FROM
+		kcgbd.t_auth auth
+		,kcgbd.t_user USR
+		WHERE 1=1
+		AND
+		auth.auth_cd = USR.auth_cd
+		AND USR.user_id = #{user_id}
+		AND USR.iam_yn =
+		#{iam_yn}
+	</select>
+
+	<insert id="insertUserAuthInfo" parameterType="cmmnMap">
+		/*
+		login.insertUserAuthInfo */
+		INSERT INTO kcgbd.t_user (
+		auth_cd
+		,user_id
+		,iam_yn
+		,reg_dt
+		,status_cd
+		,name
+		,jikgub_cd
+		,jikgub_nm
+		,dept
+		,tdept_nm
+		,email
+		,del_yn
+		) VALUES (
+		#{auth_cd}
+		,#{user_id}
+		,#{iam_yn}
+		,now()
+		,#{status_cd}
+		,#{userNm}
+		,#{jikgub_cd}
+		,#{jikgub_nm}
+		,#{dept}
+		,#{tdept_nm}
+		,#{email}
+		,'N'
+		)
+	</insert>
+
+	<update id="updateUserAuthInfo" parameterType="cmmnMap">
+		/*
+		login.updateUserAuthInfo */
+		UPDATE kcgbd.t_user SET
+		auth_cd = #{auth_cd}
+		,status_cd = #{status_cd}
+		,name = #{name}
+		,jikgub_cd = #{jikgub_cd}
+		,jikgub_nm = #{jikgub_nm}
+		,dept = #{dept}
+		,tdept_nm = #{tdept_nm}
+		,email = #{email}
+		WHERE 1=1
+		AND user_id = #{user_id}
+		AND iam_yn = #{iam_yn}
+	</update>
+
+	<select id="getAuthMenuList" parameterType="string"
+		resultType="menuVO">
+		/* login.getAuthMenuList */
+		SELECT
+		mnu.menu_nm
+		,mnu.menu_url
+		,amm.use_yn
+		,amm.c_yn
+		,amm.r_yn
+		,amm.u_yn
+		,amm.d_yn
+		FROM
+		kcgbd.t_auth_menu_mapping amm
+		,kcgbd.t_menu mnu
+		WHERE 1=1
+		AND
+		amm.menu_url = mnu.menu_url
+		AND amm.auth_cd = #{auth_cd}
+	</select>
+
+	<select id="getAuthMenuList_superadmin" parameterType="string"
+		resultType="menuVO">
+		/* login.getAuthMenuList_superadmin */
+		SELECT
+		mnu.menu_nm
+		,mnu.menu_url
+		,'Y' use_yn
+		,'Y' c_yn
+		,'Y' r_yn
+		,'Y' u_yn
+		,'Y' d_yn
+		FROM
+		kcgbd.t_menu mnu
+		WHERE 1=1
+	</select>
+
+	<select id="getAuthMenuList_allportal" parameterType="string"
+		resultType="menuVO">
+		/* login.getAuthMenuList_allportal */
+		SELECT
+		mnu.menu_nm
+		,mnu.menu_url
+		,'Y' use_yn
+		,'Y' c_yn
+		,'Y' r_yn
+		,'Y' u_yn
+		,'Y' d_yn
+		FROM
+		kcgbd.t_menu mnu
+		WHERE 1=1
+		AND mnu.admin_yn = 'N'
+	</select>
+
+	<select id="selectCodeDeptNmList" resultType="TbCodemstEntity">
+		select
+		code_no as codeNo, code_nm as codeNm
+		from
+		kcgbd.tb_codemst
+		where
+		code_cl = '300'
+	</select>
+
+	<select id="selectCodeJbpsTyCdList" resultType="TbCodemstEntity">
+		/*
+		login.TbCodemstEntity */
+		select
+		code_no as codeNo, code_nm as codeNm
+		from
+		kcgbd.tb_codemst
+		where
+		code_cl = '141'
+	</select>
+
+	<insert id="registUserInfo" parameterType="cmmnMap">
+		/*login.registUserInfo */
+		INSERT INTO
+		kcgbd.t_user (
+		auth_cd
+		,user_id
+		,iam_yn
+		,reg_dt
+		,status_cd
+		,name
+		,jikgub_cd
+		,jikgub_nm
+		,dept
+		,tdept_nm
+		,email
+		,del_yn
+		,user_pw
+		,pic_mbl_telno
+		,handphone
+		) VALUES (
+		'admin'
+		,#{userId}
+		,'N'
+		,now()
+		,'AAA'
+		,#{userNm}
+		,'1234'
+		,#{jbpsNm}
+		,#{deptNm}
+		,'1234'
+		,#{picEmlAddr}
+		,'N'
+		,#{userPswd}
+		,#{picMblTelno}
+		,#{handphone}
+		)
+	</insert>
+
+	<update id="updateUserStatusResign" parameterType="cmmnMap">
+		UPDATE kcgbd.t_user
+		SET status_cd = 'BBB'
+		WHERE user_id = #{userId}
+	</update>
+
+	<update id="updateUserInfo" parameterType="cmmnMap">
+		UPDATE kcgbd.t_user
+		SET dept = #{deptNm}, jikgub_nm = #{jbpsNm}
+		WHERE user_id = #{userId};
+	</update>
+
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='cmmn.cd'>
+	
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* cmmn.cd.getList */
+		SELECT
+			B.code_grp_id
+			,(SELECT code_grp_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = B.code_grp_id limit 1) code_grp_nm
+		FROM (
+				SELECT
+					A.code_grp_id
+				FROM 
+					kcgbd.t_cmmn_code A
+				WHERE 1=1
+				GROUP BY code_grp_id
+				ORDER BY code_grp_id
+			) B
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	</select>
+	
+	<insert id="insertInfo" parameterType="cmmnMap">
+	</insert>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	</update>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	</delete>
+	
+</mapper>

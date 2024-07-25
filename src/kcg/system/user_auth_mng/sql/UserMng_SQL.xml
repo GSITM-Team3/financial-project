@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.user_mng'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.user_mng.getList */
+		SELECT
+			USR.user_id
+			,USR.auth_cd
+			,(SELECT auth_nm FROM kcgbd.t_auth WHERE auth_cd = USR.auth_cd ) auth_nm
+			,USR.iam_yn
+			,USR.status_cd
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_id = USR.status_cd AND code_grp_id = 'STATUSCD' ) statusnm
+			,cc.code_nm AS statusnm
+			,USR.name
+			,USR.jikgub_cd
+			,USR.jikgub_nm
+			,USR.dept
+			,USR.tdept_nm
+			,USR.email
+			,auth.auth_nm
+			,USR.reg_dt
+			,USR.gis_auth
+			,to_char(USR.reg_dt, 'YYYY-MM-DD') reg_dt_char
+		FROM
+			kcgbd.t_user USR
+			,kcgbd.t_cmmn_code cc
+			,kcgbd.t_auth auth
+		WHERE 1=1
+			AND cc.code_grp_id = 'STATUSCD'
+			AND cc.code_id = USR.status_cd
+			AND USR.del_yn = 'N'
+			AND auth.auth_cd = USR.auth_cd
+			AND auth.admin_yn = 'N'
+		<if test='search_val != ""'>
+			<if test='search_nm == "name"'>
+				AND USR.name like concat('%',#{search_val},'%')
+			</if>
+			<if test='search_nm == "user_id"'>
+				AND USR.user_id like concat('%',#{search_val},'%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.user_mng.getInfo */
+		SELECT
+			USR.user_id
+			,USR.auth_cd
+			,USR.iam_yn
+			,USR.status_cd
+			,cc.code_nm AS statusnm
+			,USR.name
+			,USR.jikgub_cd
+			,USR.jikgub_nm
+			,USR.dept
+			,USR.tdept_nm
+			,USR.email
+			,USR.reg_dt
+			,USR.gis_auth
+			,to_char(USR.reg_dt, 'YYYY-MM-DD') reg_dt_char
+		FROM
+			kcgbd.t_user USR
+			,kcgbd.t_cmmn_code cc
+		WHERE 1=1
+			AND cc.code_grp_id = 'STATUSCD'
+			AND cc.code_id = USR.status_cd
+			AND USR.user_id = #{user_id}
+	</select>
+	
+	<select id="getUserSystemMappingList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.user_mng.getUserSystemMappingList */
+		SELECT
+			rm1.cnnc_manage_no
+			,rm1.hive_db_nm
+			,rm1.sys_nm
+			,rm2.table_eng_nm
+			,rm2.db_table_id
+			,rm2.table_korean_nm
+		FROM
+			kcgbd.t_user_system_mapping usm
+			,kcgbd.t_rule_meta_0001 rm1
+			,kcgbd.t_rule_meta_0002 rm2
+		WHERE 1=1
+			AND usm.user_id = #{user_id}
+			AND rm1.cnnc_manage_no = rm2.cnnc_manage_no
+			AND rm2.cnnc_manage_no = usm.cnnc_manage_no
+			AND rm2.table_eng_nm = usm.table_eng_nm
+		ORDER BY sys_nm, table_korean_nm
+	</select>
+	
+	<select id="getAuthList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.user_mng.getAuthList */
+		SELECT
+			auth.auth_cd
+			,auth.auth_nm
+			,auth.reg_dt
+		FROM
+			kcgbd.t_auth auth
+		WHERE 1=1
+			AND auth.admin_yn = 'N'
+		ORDER BY reg_dt
+	</select>
+	
+	<select id="getInternalSystemList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.user_mng.getInternalSystemList */
+		SELECT
+			rm1.cnnc_manage_no
+			,rm1.hive_db_nm
+			,rm1.sys_nm
+			,rm2.table_eng_nm
+			,rm2.db_table_id
+			,rm2.table_korean_nm
+		FROM
+			kcgbd.t_rule_meta_0001 rm1
+			,kcgbd.t_rule_meta_0002 rm2
+		WHERE 1=1
+			AND rm1.cnnc_manage_no = rm2.cnnc_manage_no
+		<if test='search_val != ""'>
+			<if test='search_nm == "sys_nm"'>
+				AND rm1.sys_nm like concat('%',#{search_val},'%')
+			</if>
+			<if test='search_nm == "table_eng_nm"'>
+				AND rm2.table_eng_nm like concat('%',#{search_val},'%')
+			</if>
+			<if test='search_nm == "table_korean_nm"'>
+				AND rm2.table_korean_nm like concat('%',#{search_val},'%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="chkExist" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.user_mng.chkExist */
+		SELECT
+			count(*) cnt
+		FROM
+			kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = #{user_id}
+	</select>
+	
+	<select id="chkExistFromIam" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.user_mng.chkExistFromIam */
+		SELECT
+			count(*) cnt
+		FROM
+			AO_IAM.VAOI_PPSS_USER_MAP_BD
+		WHERE 1=1
+			AND USERID = #{user_id}
+	</select>
+
+	<insert id="insertInfo" parameterType="cmmnMap">
+	/* system.user_mng.insertInfo */
+		INSERT INTO kcgbd.t_user (
+			user_id
+			,auth_cd
+			,iam_yn
+			,status_cd
+			,name
+			,jikgub_cd
+			,dept
+			,jikgub_nm
+			,tdept_nm
+			,email
+			,gis_auth
+			,del_yn
+			,user_pw
+			,reg_dt
+		) VALUES (
+			#{user_id}
+			,#{auth_cd}
+			,#{iam_yn}
+			,#{status_cd}
+			,#{name}
+			,#{jikgub_cd}
+			,#{dept}
+			,#{jikgub_nm}
+			,#{tdept_nm}
+			,#{email}
+			,#{gis_auth}
+			,'N'
+			,#{user_pw}
+			,now()
+		)
+	</insert>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* system.user_mng.updateInfo */
+		UPDATE kcgbd.t_user SET
+			user_id = #{user_id}
+			,auth_cd = #{auth_cd}
+			,iam_yn = #{iam_yn}
+			,status_cd = #{status_cd}
+			,name = #{name}
+			,jikgub_cd = #{jikgub_cd}
+			,dept = #{dept}
+			,jikgub_nm = #{jikgub_nm}
+			,tdept_nm = #{tdept_nm}
+			,email = #{email}
+			,gis_auth = #{gis_auth}
+		WHERE 1=1
+			AND user_id = #{user_id}
+	</update>
+	
+	<delete id="deleteUserSystemMappingList" parameterType="cmmnMap">
+	/* system.user_mng.deleteUserSystemMappingList */
+		DELETE FROM kcgbd.t_user_system_mapping
+		WHERE 1=1
+			AND user_id = #{user_id}
+	</delete>
+	
+	<insert id="insertSystemMapping" parameterType="cmmnMap">
+	/* system.user_mng.insertSystemMapping */
+		INSERT INTO kcgbd.t_user_system_mapping(
+			user_id
+			,cnnc_manage_no
+			,table_eng_nm
+		) VALUES (
+			#{user_id}
+			,#{cnnc_manage_no}
+			,#{table_eng_nm}
+		)
+	</insert>
+	
+	<update id="delete" parameterType="cmmnMap">
+	/* system.user_mng.delete */
+		UPDATE kcgbd.t_user SET
+			del_yn = 'Y'
+		WHERE 1=1
+			AND user_id = #{user_id}
+	</update>
+	
+	<update id="initPw" parameterType="cmmnMap">
+	/* system.user_mng.initPw */
+		UPDATE kcgbd.t_user SET
+			user_pw = #{user_pw}
+		WHERE 1=1
+			AND user_id = #{user_id}
+	</update>
+
+</mapper>

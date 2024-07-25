@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.menu_mng'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.menu_mng.getList */
+		SELECT
+			mnu.menu_url
+			,mnu.menu_nm
+			,mnu.menu_note
+			,mnu.admin_yn
+			,mnu.reg_user_id
+			,to_char(mnu.reg_dt, 'YYYY-MM-DD HH24:MI:SS.MS') reg_dt_char
+			,mnu.reg_dt
+		FROM
+			kcgbd.t_menu mnu
+		WHERE 1=1
+		<if test='admin_yn != ""'>
+			AND mnu.admin_yn = #{admin_yn}
+		</if>
+		<if test='search_val != ""'>
+			<if test='search_nm == "menu_url"'>
+				AND mnu.menu_url like concat('%',#{search_val},'%')
+			</if>
+			<if test='search_nm == "menu_nm"'>
+				AND mnu.menu_nm like concat('%',#{search_val},'%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.menu_mng.getInfo */
+		SELECT
+			mnu.menu_url
+			,mnu.menu_nm
+			,mnu.menu_note
+			,mnu.admin_yn
+			,mnu.reg_user_id
+			,to_char(mnu.reg_dt, 'YYYY-MM-DD HH24:MI:SS.MS') reg_dt_char
+			,mnu.reg_dt
+		FROM
+			kcgbd.t_menu mnu
+		WHERE 1=1
+			AND mnu.menu_url = #{menu_url}
+	</select>
+
+	<insert id="insertInfo" parameterType="cmmnMap">
+	/* system.menu_mng.insertInfo */
+		INSERT INTO kcgbd.t_menu(
+			menu_url
+			,menu_nm
+			,menu_note
+			,admin_yn
+			,reg_user_id
+			,reg_dt
+		) VALUES (
+			#{menu_url}
+			,#{menu_nm}
+			,#{menu_note}
+			,#{admin_yn}
+			,#{user_id}
+			,now()
+		)
+	</insert>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* system.menu_mng.updateInfo */
+		UPDATE kcgbd.t_menu SET
+			menu_nm = #{menu_nm}
+			,menu_note = #{menu_note}
+			,admin_yn = #{admin_yn}
+			,reg_user_id = #{user_id}
+		WHERE 1=1
+			AND menu_url = #{menu_url}
+	</update>
+	
+	<delete id="delete" parameterType="cmmnMap">
+	/* system.menu_mng.delete */
+		DELETE FROM kcgbd.t_menu
+		WHERE menu_url = #{menu_url}
+	</delete>
+	
+	<select id="chkExist" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.menu_mng.chkExist */
+		SELECT
+			count(*) cnt
+		FROM kcgbd.t_menu mnu
+		WHERE 1=1
+			AND mnu.menu_url = #{menu_url}
+	</select>
+	
+	<delete id="deleteAuthMapping" parameterType="cmmnMap">
+	/* system.menu_mng.deleteAuthMapping */
+		DELETE FROM kcgbd.t_auth_menu_mapping
+		WHERE menu_url = #{menu_url}
+	</delete>
+	
+</mapper>

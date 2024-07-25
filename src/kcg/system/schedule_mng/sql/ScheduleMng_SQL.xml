@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.schedule_mng'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.schedule_mng.getList */
+	    select case substring(to_char(A.tsk_bgng_dt, 'MM'),1,1)
+               when '0' then substring(to_char(A.tsk_bgng_dt, 'MM'),2,1)
+               when '1' then substring(to_char(A.tsk_bgng_dt, 'MM'),1,2)
+               end as "TSK_BGNG_DT_MON"
+              ,to_char(A.tsk_bgng_dt, 'DD') as "TSK_BGNG_DT_DD"
+              ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '130' AND CODE_NO = A.TSK_TY_CD) as "TSK_TY_CD_NM"
+              ,A.TSK_SJ        as "TSK_SJ"
+          from kcgbd.TB_PICTASK A
+              ,kcgbd.TB_PICMST  B
+              ,kcgbd.TB_CUSTPICREL C
+              ,kcgbd.TB_CUSTMST D
+         where A.pic_mbl_telno = B.pic_mbl_telno
+           and B.pic_mbl_telno = C.pic_mbl_telno
+           and C.cust_mbl_telno  = D.cust_mbl_telno
+           and B.pic_nm = #{user_id}
+           and to_char(A.tsk_bgng_dt, 'yyyy') = #{year}
+           and to_char(A.tsk_bgng_dt, 'mm') LIKE concat('%',#{month})
+	</select>
+	
+	<select id="getDayList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.schedule_mng.getDayList */
+	    select to_char(A.tsk_bgng_dt, 'HH24') as "TSK_BGNG_DT_HH"
+              ,to_char(A.tsk_bgng_dt, 'MI') as "TSK_BGNG_DT_MM"
+              ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '130' AND CODE_NO = A.TSK_TY_CD) as "TSK_TY_CD_NM"
+              ,A.TSK_SJ        as "TSK_SJ"
+          from kcgbd.TB_PICTASK A
+              ,kcgbd.TB_PICMST  B
+              ,kcgbd.TB_CUSTPICREL C
+              ,kcgbd.TB_CUSTMST D
+         where A.pic_mbl_telno = B.pic_mbl_telno
+           and B.pic_mbl_telno = C.pic_mbl_telno
+           and C.cust_mbl_telno  = D.cust_mbl_telno
+           and B.pic_nm = #{user_id}
+           and to_char(A.tsk_bgng_dt, 'yyyy') = #{year}
+           and to_char(A.tsk_bgng_dt, 'mm') LIKE concat('%',#{mon})
+           and to_char(A.tsk_bgng_dt, 'dd') LIKE concat('%',#{day})
+	</select>
+	
+	<select id="getCustInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.schedule_mng.getCustInfo */
+		SELECT  A.CUST_NM                     as CUST_NM  
+          FROM kcgbd.TB_CUSTMST A
+         where 1=1
+           and A.CURR_STCD      = '0'
+         <if test='cust_nm != ""'>
+      		and A.CUST_NM = #{cust_nm}
+        </if>
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.schedule_mng.getInfo */
+	    select A.TSK_SJ        as "TSK_SJ"
+              ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '130' AND CODE_NO = A.TSK_TY_CD) as "TSK_TY_CD_NM"
+              ,to_char(A.tsk_bgng_dt, 'yyyy') as "TSK_BGNG_DT_YEAR"
+              ,case substring(to_char(A.tsk_bgng_dt, 'MM'),1,1)
+               when '0' then substring(to_char(A.tsk_bgng_dt, 'MM'),2,1)
+               when '1' then substring(to_char(A.tsk_bgng_dt, 'MM'),1,2)
+               end as "TSK_BGNG_DT_MON"
+              ,to_char(A.tsk_bgng_dt, 'DD') as "TSK_BGNG_DT_DD"
+              ,to_char(A.tsk_bgng_dt, 'HH24') as "TSK_BGNG_DT_HH"
+              ,to_char(A.tsk_bgng_dt, 'MI') as "TSK_BGNG_DT_MM"
+              ,to_char(A.tsk_end_dt, 'yyyy') as "TTSK_END_DT_YEAR"
+              ,case substring(to_char(A.tsk_end_dt, 'MM'),1,1)
+               when '0' then substring(to_char(A.tsk_end_dt, 'MM'),2,1)
+               when '1' then substring(to_char(A.tsk_end_dt, 'MM'),1,2)
+               end as "TSK_END_DT_MON"
+              ,to_char(A.tsk_end_dt, 'DD') as "TSK_END_DT_DD"
+              ,to_char(A.tsk_end_dt, 'HH24') as "TSK_END_DT_HH"
+              ,to_char(A.tsk_end_dt, 'MI') as "TSK_END_DT_MM"
+              ,D.cust_nm as "TSK_CUST_NM"
+              ,A.tsk_dtl_cn as "TSK_DTL_CN"
+              ,A.TSK_TY_CD as "TSK_TY_CD"
+              ,(SELECT CODE_NM FROM kcgbd.TB_CODEMST WHERE CODE_CL = '130' AND CODE_NO = A.TSK_TY_CD) as "TSK_TY_CD_NM"
+              ,A.tsk_sn as "TSK_SN"
+          from kcgbd.TB_PICTASK A
+              ,kcgbd.TB_PICMST  B
+              ,kcgbd.TB_CUSTPICREL C
+              ,kcgbd.TB_CUSTMST D
+         where A.pic_mbl_telno = B.pic_mbl_telno
+           and B.pic_mbl_telno = C.pic_mbl_telno
+           and C.cust_mbl_telno  = D.cust_mbl_telno
+           and B.pic_nm = #{user_id}
+           and to_char(A.tsk_bgng_dt, 'yyyy') = #{year}
+           and to_char(A.tsk_bgng_dt, 'mm') LIKE concat('%',#{mon})
+           and to_char(A.tsk_bgng_dt, 'dd') LIKE concat('%',#{day})
+	</select>
+	
+	<insert id="insertTaskInfo" parameterType="cmmnMap">
+	/* system.schedule_mng.insertTaskInfo */
+		INSERT INTO kcgbd.TB_PICTASK(
+			tsk_sn
+	       ,pic_mbl_telno
+	       ,tsk_sj
+	       ,tsk_ty_cd
+	       ,tsk_bgng_dt
+	       ,tsk_end_dt
+	       ,tsk_dtl_cn
+	       ,cust_mbl_telno
+	       ,tsk_imprtn_cd
+		)VALUES(
+			nextval('kcgbd.seq_tsk_sn')
+	       ,(select pic_mbl_telno from kcgbd.tb_picmst where pic_nm = #{user_id})
+	       ,#{tsk_sj}
+	       ,#{tsk_ty_cd}
+	       ,to_date(concat(#{tsk_bgng_dt_year},#{tsk_bang_dt_mon},#{tsk_bgng_dt_dd},' ',#{tsk_bgng_dt_hh},#{tsk_bgng_dt_mm},'00')::text, 'YYYYMMDD HH24MISS')
+	       ,to_date(concat(#{tsk_bgng_dt_year},#{tsk_end_dt_mon},#{tsk_end_dt_dd},' ',#{tsk_end_dt_hh},#{tsk_end_dt_mm},'00')::text, 'YYYYMMDD HH24MISS')
+	       ,#{tsk_dtl_cn}
+	       ,(select cust_mbl_telno from kcgbd.tb_custmst where cust_nm = #{tsk_cust_nm})
+	       ,'A'
+		)
+	</insert>
+	
+	<delete id="deleteTaskInfo" parameterType="cmmnMap">
+	/* system.schedule_mng.deleteTaskInfo */
+		DELETE FROM kcgbd.TB_PICTASK
+		WHERE 1=1
+		 	AND tsk_sn = #{tsk_sn}
+	</delete>
+	
+</mapper>

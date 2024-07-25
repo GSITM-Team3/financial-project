@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.main'>
+
+	<select id="getTodayStat" parameterType="string" resultType="cmmnMap">
+	/* system.main.getTodayStat */
+		SELECT
+			SUM(visit_cnt) visit_cnt
+			,SUM(reg_cnt) reg_cnt
+			,SUM(req_anal_tool_cnt) req_anal_tool_cnt
+			,SUM(req_data_anal_cnt) req_data_anal_cnt
+			,SUM(req_data_collect_cnt) req_data_collect_cnt
+			,SUM(req_dnld_cnt) req_dnld_cnt
+			,SUM(share_anal_idea_cnt) share_anal_idea_cnt
+			,SUM(share_data_visual_cnt) share_data_visual_cnt
+			,SUM(share_use_example_cnt) share_use_example_cnt
+			,SUM(communi_bigdata_cnt) communi_bigdata_cnt
+			,SUM(communi_inquire_cnt) communi_inquire_cnt
+			,SUM(communi_lib_cnt) communi_lib_cnt
+			,SUM(communi_news_cnt) communi_news_cnt
+		FROM
+			kcgbd.t_statistic
+		WHERE 1=1
+			AND statistic_date = #{statistic_date}
+	</select>
+	
+	<insert id="init" parameterType="string">
+	/* system.main.init */
+		INSERT INTO kcgbd.t_statistic (
+			statistic_date
+			,user_id
+		) VALUES (
+			#{statistic_date}
+			,'SYSTEM'
+		)
+	</insert>
+	
+	<select id="getReqStat" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.main.getReqStat */
+		SELECT
+			SUM(req_anal_tool_cnt) req_anal_tool_cnt
+			,SUM(req_data_anal_cnt) req_data_anal_cnt
+			,SUM(req_data_collect_cnt) req_data_collect_cnt
+			,SUM(req_dnld_cnt) req_dnld_cnt
+		FROM
+			kcgbd.t_statistic
+		WHERE 1=1
+			AND statistic_date BETWEEN #{from_date} AND #{to_date}
+	</select>
+	
+	<select id="getVisitStat" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.main.getVisitStat */
+		SELECT
+			B.visit_cnt
+			,B.statistic_date
+			,substring(B.statistic_date, 6) mmdd_date
+		FROM (
+				SELECT
+					SUM(A.visit_cnt) visit_cnt
+					,A.statistic_date
+				FROM
+					kcgbd.t_statistic A
+				WHERE 1=1
+					AND statistic_date BETWEEN #{from_date} AND #{to_date}
+				GROUP BY A.statistic_date
+			) B
+		ORDER BY B.statistic_date
+	</select>
+	
+	<select id="selectAllNotices" resultType="cmmnMap">
+	/* system.main.selectAllNotices */
+        SELECT sbjt, ctnt, updt_dt
+        FROM kcgbd.t_anal_idea
+		ORDER BY updt_dt DESC
+        LIMIT 5
+    </select>
+    
+    <select id="selectAllProd" resultType="cmmnMap">
+    /* system.main.selectAllProd */
+       SELECT prod_nm, prod_air_max
+       FROM kcgbd.tb_prodmst
+       ORDER BY prod_air_max DESC
+       LIMIT 3
+    </select>
+
+</mapper>

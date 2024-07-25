@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='batch'>
+
+
+	<select id="getHadoopFileInfoMaxLastUpdtDt" resultType="string">
+	/* batch.getHadoopFileInfoMaxLastUpdtDt */
+		SELECT MAX(last_updt_dt)
+		FROM
+			kcgbd.st_t_hadoop_attachfile
+	</select>
+	
+	<select id="getHadoopFileInfoMaxLastUpdtDt_2" resultType="string">
+	/* batch.getHadoopFileInfoMaxLastUpdtDt_2 */
+		SELECT MAX(last_updt_dt)
+		FROM
+			kcgbd.st_t_hadoop_attachfile
+		WHERE 1=1
+			AND hdfs_file_stre_cours_nm = '/user/hive/filedata/file_cs_ism_002/20211025/20190805000000000101_1833'
+	</select>
+
+	<select id="getHadoopFileList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* batch.getHadoopFileList */
+		SELECT 
+			AA.*
+		FROM (
+			SELECT 
+				A.cntrl_hstry_sn
+				,A.wrter_id
+				,B.sittn_reprt_sn
+				,B.sittn_reprt_no
+				,B.la
+				,B.lo
+				,B.content
+				,C.mngno
+				,C.mssage_cn
+				,C.mssage_writng_dt
+				,C.mssage_se_code
+				,C.writng_dept_code
+				,A.fileid
+				,C.filename
+				,C.hdfs_file_stre_cours_nm
+				,B.last_updt_dt
+			FROM
+				st_file_cs_ism_001.st_t_attachfileload A
+				,st_file_cs_ism_001.st_t_reprtfileload B
+				,st_file_cs_ism_002.st_t_attachfilecollect C
+			WHERE 1=1
+				AND B.atchmnfl_id is not null
+				AND B.atchmnfl_id = A.fileid
+				AND A.mngno = C.mngno
+			<foreach collection="targetFileExtList" item="item" open="AND (" close=")"  separator=" OR ">
+				   lower(C.filename) LIKE CONCAT('%', #{item})
+			</foreach>
+			<if test='maxLastUpdtDt != ""'>
+			<![CDATA[
+				AND cast(B.last_updt_dt as timestamp) > cast(#{maxLastUpdtDt} as timestamp)
+			]]>
+			</if>
+		) AA
+	</select>
+	
+	<insert id="insertImgVideoInfo" parameterType="cmmnMap">
+	/* batch.insertImgVideoInfo */
+		INSERT INTO kcgbd.st_t_hadoop_attachfile (
+			cntrl_hstry_sn
+			,wrter_id
+			,content
+			,sittn_reprt_sn
+			,sittn_reprt_no
+			,la
+			,lo
+			,mngno
+			,mssage_cn
+			,mssage_writng_dt
+			,mssage_se_code
+			,writng_dept_code
+			,fileid
+			,filename
+			,hdfs_file_stre_cours_nm
+			,last_updt_dt
+			,trans_yn
+			,dn_cnt
+			,view_cnt
+		) VALUES (
+			#{cntrl_hstry_sn}
+			,#{wrter_id}
+			,#{content}
+			,#{sittn_reprt_sn}
+			,#{sittn_reprt_no}
+			,#{la}
+			,#{lo}
+			,#{mngno}
+			,#{mssage_cn}
+			,#{mssage_writng_dt}
+			,#{mssage_se_code}
+			,#{writng_dept_code}
+			,#{fileid}
+			,#{filename}
+			,#{hdfs_file_stre_cours_nm}
+			,#{last_updt_dt}
+			,'N'
+			,0
+			,0
+		)	
+	</insert>
+	
+	<select id="getHadoopFileStorTargetList" resultType="cmmnMap">
+	/* batch.getHadoopFileStorTargetList */
+		SELECT 
+			cntrl_hstry_sn
+			,wrter_id
+			,sittn_reprt_sn
+			,sittn_reprt_no
+			,la
+			,lo
+			,content
+			,mngno
+			,mssage_cn
+			,mssage_writng_dt
+			,mssage_se_code
+			,writng_dept_code
+			,fileid
+			,filename
+			,hdfs_file_stre_cours_nm
+			,last_updt_dt
+			,dn_cnt
+			,view_cnt
+			,stor_file_nm
+		FROM
+			kcgbd.st_t_hadoop_attachfile
+		WHERE 1=1
+			AND trans_yn = 'N'
+	</select>
+	
+	<update id="updateHadoopFileStorInfo" parameterType="cmmnMap">
+	/* batch.updateHadoopFileStorInfo */
+		UPDATE kcgbd.st_t_hadoop_attachfile SET
+			trans_yn = 'Y'
+			,stor_file_nm = #{stor_file_nm}
+		WHERE 1=1
+			AND hdfs_file_stre_cours_nm = #{hdfs_file_stre_cours_nm}
+	</update>
+	
+	<select id="chkExistHadoopFileStorInfo" parameterType="cmmnMap" resultType="int">
+	/* batch.chkExistHadoopFileStorInfo */
+		SELECT 
+			COUNT(*)
+		FROM
+			kcgbd.t_cmmn_file_info
+		WHERE 1=1
+			AND stor_file_nm = #{stor_file_nm}
+	</select>
+
+</mapper>

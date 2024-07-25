@@ -1,0 +1,1354 @@
+<!doctype html>
+<!-- www.data.go.kr/tcs/opd/ndm/view.do -->
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+		<meta name="format-detection" content="telephone=no">
+		<meta name="title" property="og:title" content="공공데이터 포털"/>
+		<meta name="description" property="og:description" content="국가에서 보유하고 있는 다양한 데이터를『공공데이터의 제공 및 이용 활성화에 관한 법률(제11956호)』에 따라 개방하여 국민들이 보다 쉽고 용이하게 공유•활용할 수 있도록 공공데이터(Dataset)와 Open API로 제공하는 사이트입니다."/>
+		<meta name="url" property="og:url" content="https://www.data.go.kr/tcs/opd/ndm/view.do"/>
+		<meta name="type" property="og:type" content="website"/>
+		<meta name="image" property="og:image" content="http://data.go.kr/images/biz/data-search/bg-nation.png">
+		<link rel="icon" type="image/x-icon" href="images/biz/DATA.ico">
+		<meta name="google-site-verification" content="bvyY6E17BJNPJP1TbX5pgXHq4N0tuRivFDVih6bRCXQ" />
+		<meta name="naver-site-verification" content="dddd02420b56aeebf384a2b9b68a8d20a3bcd1c7" />
+				<title>공공데이터포털</title>
+<!-- css -->
+<link rel="stylesheet" href="./css/biz/cmm/tcs/import.css" media="all">
+<link rel="stylesheet" href="./css/app.css?t=202111321_1713" media="all">
+
+<!-- js -->
+<script src="./js/biz/cmm/tcs/jquery-1.12.4.js"></script>
+<script src="./js/biz/cmm/tcs/jquery-ui.1.12.1.js"></script>
+<script src="./js/biz/cmm/tcs/jquery.easing.1.3.js"></script>
+<script src="./js/biz/cmm/tcs/tooltipster.bundle.js"></script>
+<script src="./js/biz/cmm/tcs/jquery.modal.js"></script>
+<script src="./js/biz/cmm/tcs/dayjs.min.js"></script>
+<script src="./js/biz/cmm/tcs/ui.common.js"></script>
+<script src="./js/biz/cmm/tcs/swiper.min.js"></script>
+	
+	<!-- UI/UX팀 작업결과물 -->
+		 
+ 
+<!-- js -->
+<script type="text/javascript" src="./js/biz/cmm/cmm/jquery.form.min.js"></script>					<!-- JQUERY form -->
+<script type="text/javascript" src="./js/biz/cmm/cmm/placeholders.jquery.min.js"></script>			<!-- placeholder-->
+<script type="text/javascript" src="./js/biz/cmm/cmm/script_codeSetting.js"></script>				<!-- 공통js : 공통코드 selectbox 세팅 -->
+<script type="text/javascript" src="./js/biz/cmm/cmm/script_cmmFunction.js"></script>				<!-- 공통js : 공통 기능 -->
+<script type="text/javascript" src="./js/biz/cmm/cmm/script_stringUtil.js"></script>					<!-- 공통js : 공통 문자열처리 -->
+<script type="text/javascript" src="./js/biz/cmm/cmm/script_numberUtil.js"></script>					<!-- 공통js : 공통 숫자처리 -->
+<script type="text/javascript" src="./js/biz/cmm/cmm/script_openSourceSetting.js"></script>			<!-- 공통js : 오픈소스 세팅 - -->
+<script type="text/javascript" src="./js/biz/cmm/cmm/script_cmmPopup.js"></script>					<!-- 공통js : 공통 팝업 -->
+<script type="text/javascript" src="./js/biz/cmm/cmm/moment.js"></script>							<!-- 공통js : 날짜 -->
+
+<script type="text/javascript" src="./js/biz/cmm/cmm/loading.js"></script>			             	<!-- 임시 스크립트 : 로딩바 -->
+<script type="text/javascript" src="./js/biz/cmm/cmm/underscore.js"></script>						<!-- 임시 스크립트 : 언더스코어 -->
+
+<!-- css -->
+<link rel="stylesheet" type="text/css" href="./css/biz/cmm/cmm/style_cmmCustom.css">   				<!-- 개발팀 공통 css  -->
+
+<script src="./developers.kakao.com/sdk/js/kakao.min.js"></script> 									<!-- 공통js : 카카오 SDK  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>  <!-- 공통js : copyJS  -->
+<!-- Fine Uploader template w/ customization
+  ====================================================================== -->
+<script type="text/template" id="qq-template-validation">
+        <div class="qq-uploader-selector qq-uploader">
+            <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+            </div>
+            <div class="qq-upload-button-selector qq-upload-button">
+                <div>파일 선택</div>
+            </div>
+            <ul class="qq-upload-list-selector qq-upload-list" aria-live="polite" aria-relevant="additions removals">
+                <li>
+                    <div class="qq-progress-bar-container-selector">
+                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
+                    <span class="qq-upload-file-selector qq-upload-file"></span>
+                    <span class="qq-upload-size-selector qq-upload-size"></span>
+                    <button type="button" class="qq-btn qq-upload-cancel-selector qq-upload-cancel">[취소]</button>
+                    <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">[재시도]</button>
+                    <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">[삭제]</button>
+                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                </li>
+            </ul>
+            <dialog class="qq-alert-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">[닫기]</button>
+                </div>
+            </dialog>
+            <dialog class="qq-confirm-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">[아니오]</button>
+                    <button type="button" class="qq-ok-button-selector">[예]</button>
+                </div>
+            </dialog>
+
+            <dialog class="qq-prompt-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <input type="text">
+                <div class="qq-dialog-buttons">
+                    <button type="button" class="qq-cancel-button-selector">[취소]</button>
+                    <button type="button" class="qq-ok-button-selector">[확인]</button>
+                </div>
+            </dialog>
+        </div>
+</script>
+ <script type="text/javascript">
+//  document.domain = "data.go.kr";
+
+	/**
+    * document Ready
+    */
+	$(document).ready(function(){
+		$('.date-from:text').each(function () {
+			$(this).prop("readonly", "true");
+		});
+		$('.date-to:text').each(function () {
+			$(this).prop("readonly", "true");
+		});
+		$('.date-picker-select:text').each(function () {
+			$(this).prop("readonly", "true");
+		});
+		
+	});
+</script>
+	</head>
+	<body >
+		<div class="skip">
+			<a href="#gnb" tabIndex="-1">주 메뉴 바로가기</a>
+			<a href="#contents" >콘텐츠 바로가기</a>
+			<a href="#footer" tabIndex="-1">푸터 바로가기</a>
+		</div>
+		
+		<div class="wrapper">
+			
+			<!-- 헤더+메뉴 -->
+
+ 
+<script type="text/javascript">
+
+	/**
+	 * document Ready
+	 */
+	$(document).ready(function(){
+
+		//현재메뉴 표시
+		var currentMainMenuId = fn_getCookie("currentMainMenuId");
+
+		if(!fn_empty(currentMainMenuId)){
+			$("#"+currentMainMenuId).addClass("active");
+			$("#"+currentMainMenuId).parent().parent().parent().parent().addClass("active");
+		}else{
+			$("#gnb").find(".active").each(function(idx, entry){
+				$(this).removeClass("active");
+			});
+		}
+
+		//하위메뉴 없는 경우 불필요한 태그 삭제
+		$(".ulLower").each(function(idx, entry){
+			if($(this).find("li").length == 0){
+				$(this).parent().parent().remove();
+			}
+		});
+
+		//마이페이지는 모바일 시 depth3 스타일 지정되므로 불필요한 태그 삭제는 별도로 동작
+		$(".depth2 > ul > .depth3 > ul").each(function(idx, entry){
+			if($(this).find("li").length == 0){
+				$(this).parent().remove();
+			}
+		});
+
+	});
+
+</script>
+<header id="header" tabIndex="-1">
+	<div class="inner-wrap">
+		<h1 class="logo"><a href="/index.do" title="홈페이지 바로가기">공공데이터포털</a></h1>
+
+		<button type="button" class="btn-open-gnb just-mb">메뉴보기</button>
+
+		<div class="header-wrap">
+			<p class="logo just-mb"><a href="/index.do">공공데이터포털</a></p>
+
+			<div class="util">
+				<div class="list-regist">
+					<a href="https://all.data.go.kr" target="_blank" title="목록등록관리시스템 이동">목록등록관리시스템</a>
+				</div>
+				<div class="login">
+					
+					<!-- 로그인 전 -->
+						<div class="before">
+							<a href="javascript:window.location.href='/uim/login/loginView.do';" title="로그인 이동">로그인</a>
+
+							<a href="javascript:window.location.href='/uim/mss/socialMberInfoStep1FormView.do';" title="회원가입 이동">회원가입</a>
+						</div>
+				</div>
+				<div class="link">
+					<a href="javascript:window.location.href='/cmm/cmm/siteMap.do';" class="just-pc" title="사이트맵 이동">사이트맵</a>
+					<a href="/en/index.do" class="en-link" title="영문으로 보기">ENGLISH</a>
+				</div>
+			</div>
+			<nav id="gnb">
+				<!-- pc 일때 gnb : 링크 pc, mb 일때 둘다 넣어주세요 -->
+				<ul class="gnb-pc">
+						<li id="M000100_pc">
+									<a class="upperMenu" href="#" onClick="javascript:fn_movePage(this, 'M000100_pc','/');">데이터찾기</a>
+							<div class="depth2">
+								<div class="wrap">
+									<p class="tit">데이터찾기<i class="iconset ico-arr-gnb-depth2"></i></p>
+									<ul class="ulLower">
+												<li id="M000101_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000101_pc','/tcs/dss/selectDataSetList.do');" title="데이터목록 페이지로 이동">데이터목록</a></li>
+												<li id="M000102_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000102_pc','/tcs/eds/selectCoreDataListView.do');" title="국가중점데이터 페이지로 이동">국가중점데이터</a></li>
+												<li id="M000103_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000103_pc','/tcs/eds/idt/selectIssueDataList.do');" title="이슈 및 추천데이터 페이지로 이동">이슈 및 추천데이터</a></li>
+								</ul>
+								</div>
+							</div>
+						</li>
+						<li id="M000600_pc">
+									<a class="upperMenu" href="#" onClick="javascript:fn_movePage(this, 'M000600_pc','/tcs/opd/ndm/view.do');" title="국가데이터맵 페이지로 이동">국가데이터맵</a>
+							<div class="depth2">
+								<div class="wrap">
+									<p class="tit">국가데이터맵<i class="iconset ico-arr-gnb-depth2"></i></p>
+									<ul class="ulLower">
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li id="M000200_pc">
+									<a class="upperMenu" href="#" onClick="javascript:fn_movePage(this, 'M000200_pc','/');">데이터요청</a>
+							<div class="depth2">
+								<div class="wrap">
+									<p class="tit">데이터요청<i class="iconset ico-arr-gnb-depth2"></i></p>
+									<ul class="ulLower">
+												<li id="M000203_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000203_pc','/tcs/dos/selectDataOneStListView.do');" title="데이터 1번가 페이지로 이동">데이터 1번가</a></li>
+												<li id="M000201_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000201_pc','/tcs/dor/insertDataOfferReqstProcssView.do');" title="공공데이터 제공신청 페이지로 이동">공공데이터 제공신청</a></li>
+												<li id="M000202_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000202_pc','/tcs/dor/insertTrublMdatReqstProcssView.do');" title="분쟁조정 신청 페이지로 이동">분쟁조정 신청</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li id="M000300_pc">
+									<a class="upperMenu" href="#" onClick="javascript:fn_movePage(this, 'M000300_pc','/');">데이터활용</a>
+							<div class="depth2">
+								<div class="wrap">
+									<p class="tit">데이터활용<i class="iconset ico-arr-gnb-depth2"></i></p>
+									<ul class="ulLower">
+												<li id="M000306_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000306_pc','/tcs/vas/selectVisualizationListView.do');" title="공공데이터 시각화 페이지로 이동">공공데이터 시각화</a></li>
+												<li id="M000304_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000304_pc','/tcs/lms/mpm/memberMapList.do');" title="국민참여지도 페이지로 이동">국민참여지도</a></li>
+												<li id="M000305_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000305_pc','/tcs/lms/liv/selectLocationView.do');" title="위치정보 시각화 페이지로 이동">위치정보 시각화</a></li>
+												<li id="M000301_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000301_pc','/tcs/puc/selectPublicUseCaseListView.do');" title="공공데이터 활용사례 페이지로 이동">공공데이터 활용사례</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li id="M000400_pc">
+									<a class="upperMenu" href="#" onClick="javascript:fn_movePage(this, 'M000400_pc','/');">정보공유</a>
+							<div class="depth2">
+								<div class="wrap">
+									<p class="tit">정보공유<i class="iconset ico-arr-gnb-depth2"></i></p>
+									<ul class="ulLower">
+												<li id="M000406_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000406_pc','/bbs/dnb/selectDeveloperNetworkListView.do');" title="개발자 네트워크 페이지로 이동">개발자 네트워크</a></li>
+												<li id="M000405_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000405_pc','/bbs/dsb/selectDataShareContentsListView.do');" title="데이터 공유하기 페이지로 이동">데이터 공유하기</a></li>
+												<li id="M000404_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000404_pc','/bbs/ntc/selectNoticeListView.do');" title="공지사항 페이지로 이동">공지사항</a></li>
+												<li id="M000402_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000402_pc','/bbs/rcr/selectRecsroomList.do');" title="자료실 페이지로 이동">자료실</a></li>
+												<li id="M000403_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000403_pc','/bbs/faq/selectFaqList.do');" title="문의하기 페이지로 이동">문의하기</a></li>
+								</ul>
+								</div>
+							</div>
+						</li>
+						<li id="M000500_pc">
+									<a class="upperMenu" href="#" onClick="javascript:fn_movePage(this, 'M000500_pc','/');">이용안내</a>
+							<div class="depth2">
+								<div class="wrap">
+									<p class="tit">이용안내<i class="iconset ico-arr-gnb-depth2"></i></p>
+									<ul class="ulLower">
+												<li id="M000504_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000504_pc','/ugs/selectPublicDataUseGuideView.do');" title="공공데이터 이용가이드 페이지로 이동">공공데이터 이용가이드</a></li>
+												<li id="M000501_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000501_pc','/ugs/selectPortalInfoView.do');" title="공공데이터포털 소개 페이지로 이동">공공데이터포털 소개</a></li>
+												<li id="M000502_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000502_pc','/ugs/selectPortalPolicyView.do');" title="공공데이터 정책 페이지로 이동">공공데이터 정책</a></li>
+												<li id="M000503_pc"><a href="#" onClick="javascript:fn_movePage(this, 'M000503_pc','/ugs/selectPublicDataQlityView.do');" title="공공데이터 품질관리 페이지로 이동">공공데이터 품질관리</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+				</ul>
+				<!-- 모바일 일때 gnb : 링크 pc, mb 일때 둘다 넣어주세요 -->
+				<!-- 모바일 일때 국가데이터맵은 서비스 하지않음 -->
+				<ul class="gnb-mb">
+							<li id="M000100_mb">
+								<a class='upperMenu' href="#" onClick="javascript:fn_movePage(this, 'M000100_mb','/',true);">데이터찾기</a>
+								<div class="depth2">
+									<div class="wrap">
+										<ul class="ulLower">
+													<li id="M000101_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000101_mb','/tcs/dss/selectDataSetList.do');">데이터목록</a></li>
+													<li id="M000102_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000102_mb','/tcs/eds/selectCoreDataListView.do');">국가중점데이터</a></li>
+													<li id="M000103_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000103_mb','/tcs/eds/idt/selectIssueDataList.do');">이슈 및 추천데이터</a></li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							<li id="M000200_mb">
+								<a class='upperMenu' href="#" onClick="javascript:fn_movePage(this, 'M000200_mb','/',true);">데이터요청</a>
+								<div class="depth2">
+									<div class="wrap">
+										<ul class="ulLower">
+													<li id="M000203_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000203_mb','/tcs/dos/selectDataOneStListView.do');">데이터 1번가</a></li>
+													<li id="M000201_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000201_mb','/tcs/dor/insertDataOfferReqstProcssView.do');">공공데이터 제공신청</a></li>
+													<li id="M000202_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000202_mb','/tcs/dor/insertTrublMdatReqstProcssView.do');">분쟁조정 신청</a></li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							<li id="M000300_mb">
+								<a class='upperMenu' href="#" onClick="javascript:fn_movePage(this, 'M000300_mb','/',true);">데이터활용</a>
+								<div class="depth2">
+									<div class="wrap">
+										<ul class="ulLower">
+													<li id="M000306_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000306_mb','/tcs/vas/selectVisualizationListView.do');">공공데이터 시각화</a></li>
+													<li id="M000304_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000304_mb','/tcs/lms/mpm/memberMapList.do');">국민참여지도</a></li>
+													<li id="M000305_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000305_mb','/tcs/lms/liv/selectLocationView.do');">위치정보 시각화</a></li>
+													<li id="M000301_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000301_mb','/tcs/puc/selectPublicUseCaseListView.do');">공공데이터 활용사례</a></li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							<li id="M000400_mb">
+								<a class='upperMenu' href="#" onClick="javascript:fn_movePage(this, 'M000400_mb','/',true);">정보공유</a>
+								<div class="depth2">
+									<div class="wrap">
+										<ul class="ulLower">
+													<li id="M000406_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000406_mb','/bbs/dnb/selectDeveloperNetworkListView.do');">개발자 네트워크</a></li>
+													<li id="M000405_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000405_mb','/bbs/dsb/selectDataShareContentsListView.do');">데이터 공유하기</a></li>
+													<li id="M000404_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000404_mb','/bbs/ntc/selectNoticeListView.do');">공지사항</a></li>
+													<li id="M000402_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000402_mb','/bbs/rcr/selectRecsroomList.do');">자료실</a></li>
+													<li id="M000403_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000403_mb','/bbs/faq/selectFaqList.do');">문의하기</a></li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							<li id="M000500_mb">
+								<a class='upperMenu' href="#" onClick="javascript:fn_movePage(this, 'M000500_mb','/',true);">이용안내</a>
+								<div class="depth2">
+									<div class="wrap">
+										<ul class="ulLower">
+													<li id="M000504_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000504_mb','/ugs/selectPublicDataUseGuideView.do');">공공데이터 이용가이드</a></li>
+													<li id="M000501_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000501_mb','/ugs/selectPortalInfoView.do');">공공데이터포털 소개</a></li>
+													<li id="M000502_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000502_mb','/ugs/selectPortalPolicyView.do');">공공데이터 정책</a></li>
+													<li id="M000503_mb"><a href="#" onClick="javascript:fn_movePage(this,'M000503_mb','/ugs/selectPublicDataQlityView.do');">공공데이터 품질관리</a></li>
+										</ul>
+									</div>
+								</div>
+							</li>
+					<!-- 모바일 일때 마이페이지 메뉴도 제공 -->
+				</ul>
+			</nav>
+			<button type="button" class="btn-close-gnb just-mb">메뉴보기</button>
+		</div>
+	</div>
+</header>
+
+<script type="text/javascript">
+
+	/**
+    * 페이지 이동
+    * @param  : menuId - 메뉴 ID
+    * @param  : menuUrl - 이동 menuUrl
+    * @return : 없음
+    */
+	function fn_movePage(obj, menuId, menuUrl){
+
+    	if(fn_empty(menuUrl)) return;
+
+		//상위메뉴가 아닌 경우만 URL 호출
+		if($(obj).prop("class") != "upperMenu"){
+			if(menuUrl == "/"){
+				alert("서비스 준비중입니다.");
+				return;
+			}
+
+			fn_setCookie("currentMainMenuId", menuId, 1);
+			window.location.href = menuUrl;
+		//상위메뉴면서 하위메뉴가 없는 경우, URL 호출
+		}else{
+			if($(obj).next().length == 0){
+				if(menuUrl == "/"){
+					alert("서비스 준비중입니다.");
+					return;
+				}else{
+					fn_setCookie("currentMainMenuId", menuId, 1);
+					document.location.href = menuUrl;
+				}
+
+			}
+		}
+    }
+</script>
+			<!-- 임시 스타일 지정 -->
+			<div class="container">
+				<!-- url에 '/iim/'이 포함되어있으면 마이페이지 왼쪽메뉴 표시 -->
+				<div class='content-layout '>
+					<div id="contents">
+						<!-- 본문 -->
+
+<link rel="stylesheet" href="./js/biz/eds/ndm/jstree/themes/default/style.min.css" media="all">
+<link rel="stylesheet" href="./css/biz/eds/ndm/frame.css" media="all">
+
+<script src="./js/biz/eds/ndm/common.js"></script>
+<script src="./js/biz/eds/ndm/ui.common.js"></script>
+
+<script src="./js/biz/eds/ndm/frame_v2_data.js"></script>
+<script src="./js/biz/eds/ndm/frame_v2.js"></script>
+
+<script src="./js/biz/eds/ndm/d3.v4.min.js"></script>
+<script src="./js/biz/eds/ndm/jstree/jstree.js"></script>
+<script src="./js/biz/eds/ndm/jstree/jstree.min.js"></script>
+
+<!-- <script src="./js/biz/cmm/tcs/dayjs.min.js"></script> -->
+<!-- <script src="./js/biz/cmm/tcs/swiper.min.js"></script> -->
+<!-- <script src="./js/biz/cmm/tcs/tooltipster.bundle.js"></script> -->
+
+<script>
+
+$(document).ready(function() {
+
+});
+
+function changeFullScreen() {
+
+	var doc = window.document;
+	var docEl = document.getElementById("graph-area");
+
+	var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+	var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+	if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+		if(null != requestFullScreen){
+			$("#treemap_div").attr("style", "height:100%;");
+			requestFullScreen.call(docEl);
+		}else{
+			alert("Internet Explorer11 에서 사용 가능합니다.");
+		}
+	}else {
+		$("#treemap_div").attr("style", "height:800px");
+	    cancelFullScreen.call(doc);
+	}
+}
+
+
+var type = ''
+function fn_insertReqstDocView(paramType){
+	type = paramType;
+	$.ajax({
+		  data : {}
+		, dataType : 'json'
+		, type : 'post'
+		, url : '/tcs/dor/selectLoginInfo.do'
+		, success : function(result){
+			if(result.result == 'success'){
+				document.location.href = '/tcs/dor/insertDataOfferReqstDocView.do?type='+type;
+			} else {
+				if(confirm('로그인한 회원만 가능합니다. 로그인 페이지로 이동하시겠습니까?')){
+					var openNewWindow = window.open("about:blank");
+					openNewWindow.location.href = '/uim/login/loginView.do';
+				}
+			}
+		  }
+		, error : function(request, statsu, error){
+			alert('잠시후 다시 시도해 주세요.')
+		}
+	})
+}
+
+</script>
+
+<h2 class="tit">
+	국가데이터맵
+	<button class="reset tool-tip tooltipstered" data-tooltip-content="#tooltip_cont_1"><i class="iconset ico-tooltip">툴팁 보기</i></button>
+
+	<span class="tooltip-contents">
+		<span id="tooltip_cont_1">
+			국가데이터 맵이란?<br />
+			모든 기관이 보유한 개방 가능한 데이터의 소재정보 및 연관관계를 쉽게 검색하여 찾아볼 수 있는 데이터 관계도 입니다.
+		 </span>
+	</span>
+</h2>
+<div class="nation-map-wrap">
+	<!-- search-area -->
+	<div class="map-search-area">
+		<div class="wrap">
+			<!-- <select title="검색 구분 선택">
+				<option value="YZ">개방목록</option>
+				<option value="N">보유목록</option>
+			</select> -->
+
+			<input type="search" id="input-keyword" title="검색어 입력" placeholder="공공데이터의 길라잡이 국가데이터맵 검색어를 입력해주세요" class="input-text"/>
+
+			<!-- <div class="auto-keyword-list" style="display:block;">
+				<ul>
+					<li><button type="button">마가목</button></li>
+					<li><button type="button">마가목</button></li>
+					<li><button type="button">마가목</button></li>
+					<li><button type="button">마가목</button></li>
+				</ul>
+			</div> -->
+
+			<div class="auto-keyword-list" style="display:none;">
+				<ul id="keyword-list">
+					<li>자동 완성 텍스트</li>
+					<li>자동 완성 텍스트2</li>
+				</ul>
+			</div>
+
+			<select title="조건 선택" class="select-and-or">
+				<option>AND</option>
+				<option>OR</option>
+			</select>
+			<button type="button" id="btnSearch" class="btn-search-icon" title="검색하기">검색</button>
+		</div>
+
+		<div class="result-info">
+			<!-- <p class="txt"><em>“미세먼지”</em> 에 대해 <em>총 30건</em>이 검색되었습니다.</p> -->
+
+			<a href="#" class="more-search" style="display: none">연관어 확장검색</a>
+		</div>
+	</div>
+	<!--// search-area -->
+
+	<!-- map-area -->
+	<div class="map-area">
+		<!-- class tab-filter 에 js 기능 있음. ui.common.js -->
+		<div id="tab-menu" class="sort-tab">
+			<div class="tab-filter">
+				<ul>
+					<li class="on"><a href="#" class="tool-tip-txt" data-tooltip-content="#tooltip_cont_2">관계도맵</a></li>
+					<li><a href="#" class="tool-tip-txt" data-tooltip-content="#tooltip_cont_3">확장맵</a></li>
+					<li><a href="#" class="tool-tip-txt" data-tooltip-content="#tooltip_cont_4">상세목록</a></li>
+				</ul>
+			</div>
+			<span class="tooltip-contents">
+				<span id="tooltip_cont_2">
+					검색어와 연관 키워드간의 관계도를 볼 수 있는 그래프입니다.<br />
+					검색어와 연관어, 데이터는 원으로 표현되며 연결선은 데이터간 연관성을 표현합니다.
+				</span>
+			</span>
+			<span class="tooltip-contents">
+				<span id="tooltip_cont_3">
+					검색어 / 연관키워드 → 분류체제 → 메타데이터 정보 순으로 확장하면서 조회할 수 있습니다.
+				</span>
+			</span>
+			<span class="tooltip-contents">
+				<span id="tooltip_cont_4">
+					검색어와 연관 키워드에 해당하는 정보를 목록으로 조회할 수 있습니다.
+				</span>
+			</span>
+		</div>
+
+		<!-- filter-section -->
+		<div class="filter-section v1">
+			<div class="tit-area">
+				<p class="tit">분류명</p>
+				<button type="button" class="btn-move">필터기능 안보기</button>
+			</div>
+
+			<!-- cont-area -->
+			<div class="cont-area">
+				<!-- 개방데이터만 표출하도록 주석처리 2020-07-14 -->
+				<!-- <div class="open-yn" style="padding: 8px 10px;">
+					<p class="tit">개방여부</p>
+
+					<ul>
+						<li class="on"><a href="#">전체</a></li>
+						<li><a href="#">개방</a></li>
+						<li><a href="#">예정</a></li>
+					</ul>
+				</div> -->
+
+				<div id="tree_jstree_div" class="chk-area">
+				</div>
+
+				<!-- chk-area -->
+				<div class="chk-area brm">
+					<div class="chk-all">
+						<label for="all-check-brm">분류명</label>
+						<input type="checkbox" id="all-check-brm" class="all-check" checked><label for="all-check-brm"><span></span></label>
+					</div>
+
+					<div id="brm_jstree_div" class="list-scroll">
+						<!-- <ul class="list">
+							<li>
+								<input type="checkbox" id="chk_01_01">
+								<label for="chk_01_01">교육</label>
+							</li>
+							<li>
+								<input type="checkbox" id="chk_01_02">
+								<label for="chk_01_02">국토관리</label>
+							</li>
+							<li>
+								<input type="checkbox" id="chk_01_03">
+								<label for="chk_01_03">공공행정</label>
+							</li>
+						</ul> -->
+					</div>
+
+					<!-- <div class="more">
+						<button type="button" class="btn-more">더보기 <i class="iconset ico-more-arr"></i></button>
+					</div> -->
+				</div>
+				<!--// chk-area -->
+
+				<!-- chk-area -->
+				<div class="chk-area org">
+					<div class="chk-all">
+						<label for="all-check-org">기관명</label>
+						<input type="checkbox" id="all-check-org" class="all-check" checked><label for="all-check-org"><span></span></label>
+					</div>
+
+					<div id="org_jstree_div" class="list-scroll">
+						<!-- <ul class="list">
+							<li>
+								<input type="checkbox" id="chk_02_01">
+								<label for="chk_02_01">강원도</label>
+							</li>
+							<li>
+								<input type="checkbox" id="chk_02_02">
+								<label for="chk_02_02">경기도 수원시</label>
+							</li>
+							<li>
+								<input type="checkbox" id="chk_02_03">
+								<label for="chk_02_03">경기도 시흥시</label>
+							</li>
+							<li>
+								<input type="checkbox" id="chk_02_04">
+								<label for="chk_02_04">경기도 양주시</label>
+							</li>
+							<li>
+								<input type="checkbox" id="chk_02_05">
+								<label for="chk_02_05">경기도</label>
+							</li>
+						</ul> -->
+					</div>
+
+					<!-- <div class="more">
+						<button type="button" class="btn-more">더보기 <i class="iconset ico-more-arr"></i></button>
+					</div> -->
+				</div>
+				<!--// chk-area -->
+
+				<div class="slider-area">
+					<p class="tit">데이터 연관도</p>
+					<div class="slider-wrap">
+						<div class="data-slider">
+						</div>
+						<div class="num">
+							<p class="min" title="최소값">낮음</p>
+							<p class="max" title="최대값">높음</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--// cont-area -->
+		</div>
+		<!--// filter-section -->
+
+		<!-- graph-section -->
+		<div class="graph-section">
+			<div id="guide-Info-area1"></div>
+
+			<!-- <div class="padding" id="guide-Info-area2" style="display: none;">
+				<div class="graph-info">
+					<div class="legend">
+						<p title="검색어" class="search-word">검색어</p>
+						<p title="연관어" class="relation-word">연관어</p>
+						<p title="개방 데이터" class="data-word">개방 데이터</p>
+						<p title="개방예정 데이터" class="data-word02">개방예정 데이터</p>
+					</div>
+				</div>
+			</div> -->
+
+			<!-- 2020-01-22 : on off 라디오 추가  -->
+			<div class="on-off" id="allDataRadioBtn" style="top: 6px; display: none;">
+				<p class="tit">전체 데이터연결</p>
+
+				<div class="bg-radio-off-on">
+					<div class="wrap">
+						<div class="bg off">
+							<input type="radio" id="bg_radio_off" name="bg_radio_off_on" value="Y"/>
+							<label for="bg_radio_off">off</label>
+						</div>
+
+						<div class="bg on">
+							<input type="radio" id="bg_radio_on" name="bg_radio_off_on" value="N" checked="checked"/>
+							<label id="onOffBtn" for="bg_radio_on">on</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--// 2020-01-22 : on off 라디오 추가  -->
+
+			<!-- <div class="padding" id="guide-Info-area3" style="display: none;">
+				<div class="graph-category">
+					<ul>
+						<li class="c-1">검색어</li>
+						<li class="c-2">연관어</li>
+						<li class="c-3">분류체계</li>
+						<li class="c-4">데이터</li>
+					</ul>
+				</div>
+			</div> -->
+
+			<div class="padding" id="table-Info-area" style="display: none;">
+			</div>
+
+			<div id="graph-area" class="graph-area" style="width: 100%; background-color: #ffffff;">
+				<div class="padding" id="guide-Info-area2" style="display: none; float: right; padding: 14px 168px;">
+					<div class="graph-info">
+						<div class="legend">
+							<p title="검색어" class="search-word">검색어</p>
+							<p title="연관어" class="relation-word">연관어</p>
+							<p title="개방 데이터" class="data-word">개방 데이터</p>
+							<!-- <p title="개방예정 데이터" class="data-word02">개방예정 데이터</p> -->
+						</div>
+					</div>
+				</div>
+
+				<div class="padding" id="guide-Info-area3" style="display: none; float: right; padding: 14px 168px;">
+					<div class="graph-category">
+						<ul>
+							<li class="c-1">검색어</li>
+							<li class="c-2">연관어</li>
+							<li class="c-3">분류체계</li>
+							<li class="c-4">데이터</li>
+						</ul>
+					</div>
+				</div>
+
+				<div id="zoomArea" class="graph-util" style="display: none; padding-top: 7px;">
+					<div class="border">
+						<!--
+							웹 접근성상 버튼에 대한 설명을 해야하는데 기획서에 없어서 임시로 넣음
+						-->
+						<button type="button" title="현재" class="now" id="init_btn">현재</button>
+						<button type="button" title="영역 넓히기" class="area" onclick="changeFullScreen();">영역 넓히기</button>
+						<button type="button" title="확대" class="zoomin" id="zoomin_btn">확대</button>
+						<button type="button" title="축소" class="zoomout" id="zoomout_btn">축소</button>
+					</div>
+				</div>
+
+				<div class="box-radio" style="display: none; background: #ffffff; right: 19px; top: 47px;">
+					<p class="tit">확장기준</p>
+					<div class="box">
+						<input type="radio" id="radio_extend_01" name="radio_extend" value="N" checked="checked"/>
+						<label for="radio_extend_01">분류명</label>
+
+						<input type="radio" id="radio_extend_02" name="radio_extend" value="Y" />
+						<label for="radio_extend_02">기관명</label>
+					</div>
+				</div>
+
+				<!-- 그래프 들어가는 영역 : height 625px -->
+				<div class="graph" id="treemap_div">
+					<svg id="treemap"></svg>
+				</div>
+
+			</div>
+
+		</div>
+		<!--// graph-section -->
+
+		<!-- detail-section -->
+		<div id="detail-section-1" class="detail-section">
+			<form action="/tcs/dor/insertDataOfferReqstProcssView.do" id="PrpnForm" name="PrpnForm" target="_blank" method="post">
+				<input type="hidden" name="mapLinkYn" id="mapLinkYn" value="Y" />
+				<input type="hidden" name="insttCode" id="insttCode" />
+				<input type="hidden" name="insttNm" id="insttNm" />
+				<input type="hidden" name="pblinfoNm" id="pblinfoNm" />
+				<input type="hidden" name="usePurps" id="usePurps" />
+				<!-- <a href="#" class="link r" onclick="javascript:mapLink()"">데이터요청 바로가기</a> -->
+			</form>
+
+			<div class="tit-area">
+				<p class="tit">개방목록 상세정보</p>
+
+				<button type="button" class="btn-close-detail-section">상세영역 닫기</button>
+			</div>
+
+			<div class="scroll">
+				<div class="table-area">
+					<div class="tit">
+						<span class="tagset skyblue">CSV</span>
+						<em>광주광역시 소방학교 미세먼지 농도 현황</em>
+					</div>
+
+					<p class="table-control"><a href="#" class="open">데이터 정보 닫기</a></p>
+
+					<div class="row-table" style="display: block;">
+						<table>
+							<caption></caption>
+							<colgroup>
+								<col style="width:110px;">
+								<col />
+							</colgroup>
+							<tbody>
+								<tr>
+									<th scope="row">개방분류체계</th>
+									<td>
+										산업고용 〉 에너지및자원개발
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">보유기관명</th>
+									<td>
+										국토연구원
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">개방목록설명</th>
+									<td>
+										광주소방기관에서 사용하는 용기(산소통) 충전 시설인 광주 광역시 소방학교 호흡보호 장비정비실내의 공
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">키워드</th>
+									<td>
+										미세먼지, 공기질, 호흡보호장비정비
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">등록유형</th>
+									<td>
+										DATA
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">개방여부</th>
+									<td>
+										개방
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="button-group a-c">
+						<a id="downBtn" target="_blank" title="새창 열림" href="#" class="button blue">바로가기</a>
+						<!-- <a target="_blank" href="" class="button">확장관계도맵보기</a> -->
+						<a id="linkBtn" href="#" class="button blue" onclick="javascript:fn_insertReqstDocView('pblinstt')" style="display: none;">데이터요청 바로가기</a>
+					</div>
+
+					<p class="table-title">보유 데이터</p>
+					<div class="col-table v1">
+						<table>
+							<caption>보유 데이터 표</caption>
+							<colgroup>
+								<col style="width:120px" />
+								<col />
+							</colgroup>
+							<thead>
+								<tr>
+									<th scope="col">데이터명</th>
+									<th scope="col">항목</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="a-l">서울시 미세먼지 비상저감 발령정보</td>
+									<td class="a-l">인덱스, 타이틀, 발령내용, 구분, 발령일시, 시행일시, 발령단계</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- list-area -->
+				<div id="relaDataList" class="list-area" style="display: none;">
+					<p class="tit">
+						연관데이터목록
+					</p>
+
+					<ul class="list">
+						<!-- <li>
+							<p class="txt">진주시 부동산중개업소 정보</p>
+
+							<p class="source">
+								국토연구원 | 연관수치 0.083
+							</p>
+
+							<a href="#" class="button">연결정보</a>
+						</li>
+						<li>
+							<p class="txt">진주시 부동산중개업소 정보</p>
+
+							<p class="source">
+								국토연구원 | 연관수치 0.083
+							</p>
+
+							<a href="#" class="button">연결정보</a>
+						</li> -->
+					</ul>
+				</div>
+				<!--// list-area -->
+			</div>
+		</div>
+		<!--// detail-section -->
+
+		<!-- detail-section -->
+		
+		<!--// detail-section -->
+
+	</div>
+	<!--// map-area -->
+</div>
+
+<div id="data-info-layer" class="modal large">
+	<p class="layer-title">데이터 연결정보</p>
+	<div class="layer-contents">
+		<div class="row-table">
+			<table>
+				<caption>데이터 연결정보 표</caption>
+				<colgroup>
+					<col style="width:140px" />
+					<col style="" />
+					<col style="" />	<!-- 2020-08-31 : col 추가 -->
+				</colgroup>
+				<tbody>
+					<tr>
+						<th scope="row">데이터명</th>
+						<td class="bg">
+							<!-- 국토연구원 부동산시장 소비심리 정보 -->
+						</td>
+						<td class="bg">
+							<!-- 진주시 부동산중개업소 정보 -->
+						</td>
+					</tr>
+					<tr >
+						<th scope="row">연결항목</th>
+						<td colspan="2">
+							<div class="word-group">
+								<span>부동산주소</span>
+								<span>공시지가</span>
+								<span>부동산주소</span>
+								<span>공시지가</span>
+								<span>부동산주소부동산주소부동산주소</span>
+								<span>공시지가</span>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">연결분류체계</th>
+						<td>공공행정</td>
+						<td>공공행정/행정</td>
+					</tr>
+					<tr>
+						<th scope="row">검색어</th>
+						<td>주민편의</td>
+						<td>편의</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div id="extend-search-layer" class="modal" style="width:720px;">
+	<p class="layer-title">확장검색</p>
+	<div class="layer-contents">
+		<p class="reset mb15">더 정확한 검색 결과를 얻고자 할 때 확장검색 기능을 이용하세요. <br>
+		확장 검색할 키워드를 선택 후 검색 버튼을 클릭하세요.</p>
+
+		<!-- <p class="a-r reset mb10">
+			<input type="checkbox" id="select-all">
+			<label for="select-all">전체 선택</label>
+		</p> -->
+		<div class="data-table v1 mb15">
+			<table>
+				<caption>확장검색 목록 표</caption>
+				<colgroup>
+					<col style="" />
+					<col style="" />
+					<col style="" />
+					<col style="" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">민간포털</th>
+						<th scope="col">뉴스</th>
+						<th scope="col">법률정보</th>
+						<th scope="col">이용자 동시 검색어</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="a-l va-t">
+							<ul class="label-list">
+								<li><input type="checkbox" id="chk_1"><label for="chk_1">황사</label></li>
+								<li><input type="checkbox" id="chk_2"><label for="chk_2">초미세</label></li>
+								<li><input type="checkbox" id="chk_3"><label for="chk_3">중국발 미세먼지</label></li>
+								<li><input type="checkbox" id="chk_4"><label for="chk_4">환경오염</label></li>
+							</ul>
+						</td>
+						<td class="a-l va-t">
+							<ul class="label-list">
+								<li><input type="checkbox" id="chk_5"><label for="chk_5">황사</label></li>
+								<li><input type="checkbox" id="chk_6"><label for="chk_6">초미세</label></li>
+								<li><input type="checkbox" id="chk_7"><label for="chk_7">중국발 미세먼지</label></li>
+								<li><input type="checkbox" id="chk_8"><label for="chk_8">환경오염</label></li>
+							</ul>
+						</td>
+						<td class="a-l va-t">
+							<ul class="label-list">
+								<li><input type="checkbox" id="chk_9"><label for="chk_9">황사</label></li>
+								<li><input type="checkbox" id="chk_10"><label for="chk_10">초미세</label></li>
+								<li><input type="checkbox" id="chk_11"><label for="chk_11">중국발 미세먼지</label></li>
+								<li><input type="checkbox" id="chk_12"><label for="chk_12">환경오염</label></li>
+								<li><input type="checkbox" id="chk_13"><label for="chk_13">초미세</label></li>
+								<li><input type="checkbox" id="chk_14"><label for="chk_14">중국발 미세먼지</label></li>
+								<li><input type="checkbox" id="chk_15"><label for="chk_15">환경오염</label></li>
+								<li><input type="checkbox" id="chk_16"><label for="chk_16">환경오염</label></li>
+								<li><input type="checkbox" id="chk_17"><label for="chk_17">환경오염</label></li>
+							</ul>
+						</td>
+						<td class="a-l va-t">
+							<ul class="label-list">
+								<li><input type="checkbox" id="chk_18"><label for="chk_18">황사</label></li>
+								<li><input type="checkbox" id="chk_19"><label for="chk_19">초미세</label></li>
+								<li><input type="checkbox" id="chk_20"><label for="chk_20">중국발 미세먼지</label></li>
+								<li><input type="checkbox" id="chk_21"><label for="chk_21">환경오염</label></li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<p class="paragraph">
+			[안내] <br>
+			- 민간포털 : 민간 포털에서 수집된 연관어 입니다.<br>
+			- 뉴스 : 수집된 뉴스기사를 분석한 연관어 입니다.<br>
+			- 법률정보 : 수집된 법률정보를 분석한 연관어 입니다.<br>
+			- 이용자 동시 검색어 : 검색어와 함께 검색된 단어 중 빈도수가 높은 키워드입니다.
+		</p>
+
+		<div class="button-group a-c mt15">
+			<a href="" class="button blue font-bold">검색</a>
+		</div>
+	</div>
+</div>
+
+<div id="data_all_get_request" class="modal" style="width:1020px">
+	<p class="layer-title">데이터 일괄다운로드</p>
+	<div class="layer-contents">
+
+		<p class="reset">개방목록 검색결과 데이터를 일괄 제공요청 할 수 있습니다.</p>
+
+		<div class="a-r mt10 mb10">
+			<button type="button" class="button blue">다운로드</button>
+		</div>
+
+		<div class="scroll-table">
+			<div class="col-table">
+				<table>
+					<caption>데이터다운로드 표</caption>
+					<colgroup>
+						<col style="width:60px" />
+						<col style="" />
+						<col style="width:120px" />
+						<col style="width:120px" />
+						<col style="width:120px" />
+						<col style="width:120px" />
+						<col style="width:40px" />
+					</colgroup>
+					<thead>
+						<tr>
+							<th scope="col">No.</th>
+							<th scope="col">개방목록 명</th>
+							<th scope="col">분류명</th>
+							<th scope="col">기관명</th>
+							<th scope="col">확장자</th>
+							<th scope="col">서비스 유형</th>
+							<th scope="col"><input type="checkbox" id="checkAll"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td class="a-l">광주광역시 소방학교 미세먼지 농도 현황</td>
+							<td>분류명</td>
+							<td>기관명</td>
+							<td>XLS</td>
+							<td>다운로드</td>
+							<td><input type="checkbox"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- 데이터 관계도 레이어 팝업 -->
+<!-- <div id="data-relation-layer" class="modal" style="width:720px;">
+	<p class="layer-title">데이터관계도</p>
+	<div class="layer-contents">
+		<div class="sort-count">
+			표시건수
+			<select>
+				<option value="">5</option>
+			</select>
+		</div>
+
+		<div>그래프 영역</div>
+	</div>
+</div> -->
+
+<span class="request-float-btn">
+		<a href="javascript:fn_callForm('ndm')"><i class="iconset ico-pencil"></i>의견수렴<br /> 게시판</a>
+	</span>
+	<div class="button-group a-r">
+		<a href="javascript:fn_callForm('ndm')" id="application-btn" class="button" title="게시판 바로가기">의견수렴 게시판</a>
+	</div>
+	<script>
+		var fn_callForm = function(category) {
+
+			if(fn_empty("")){
+				if(confirm("로그인이 필요한 서비스입니다. 로그인 화면으로 이동하시겠습니까?")){
+					location.href = "/uim/login/loginView.do";
+					return;
+				};
+				return;
+			}
+
+			location.href = "/bbs/doc/insertOpinionClctForm.do?category=" + category;
+
+			return false;
+		}
+	</script>
+
+<script type="text/javascript">
+	var type = ''
+	function fn_insertReqstDocView(paramType){
+		type = paramType;
+		$.ajax({
+			  data : {}
+			, dataType : 'json'
+			, type : 'post'
+			, url : '/tcs/dor/selectLoginInfo.do'
+			, success : function(result){
+				if(result.result == 'success'){
+					document.location.href = '/tcs/dor/insertDataOfferReqstDocView.do?type='+type;
+				} else {
+					if(confirm('로그인한 회원만 가능합니다. 로그인 페이지로 이동하시겠습니까?')){
+						document.location.href = '/uim/login/loginView.do';
+					}
+				}
+			  }
+			, error : function(request, statsu, error){
+				alert('')
+			  }
+		})
+	}
+
+</script>
+
+					</div>
+				</div>
+			</div>
+			
+			<aside class="quick-area">
+				<a href="#top" class="btn-go-top" title="맨 위로 가기">상단가기</a>
+			</aside>
+
+ <!-- footer -->
+<footer id="footer" tabIndex="-1">
+	<div class="inner-wrap">
+		<div class="footer-util">
+			<div class="tel">
+				<i class="iconset ico-tel"></i> <strong>공공데이터 개방문의</strong> <a title="바로 전화 걸기" href="tel:1566-0025">1566-0025</a>
+			</div>
+			
+			<div class="email">
+				<a title="이메일 바로가기" href="mailto:opendata_help@nia.or.kr"><i class="iconset ico-email"></i> 운영자 메일상담</a>
+			</div>
+			
+			<div class="sns-share">
+
+				<a href="http://www.facebook.com/koreadataportal" target="_blank" title="새창 열림">
+					<i class="iconset ico-facebook">페이스북 공유</i>
+				</a>
+				<a href="https://twitter.com/koreadataportal" target="_blank" title="새창 열림">
+					<i class="iconset ico-twitter">트위터 공유</i>
+				</a>
+				<a href="http://blog.naver.com/nia_korea" target="_blank" title="새창 열림">
+					<i class="iconset ico-blog">블로그 공유</i>
+				</a>
+			</div>
+			<!-- 2020-02-19 뉴스레터 신청 레이어 팝업 -->
+			<div id="layer_newsletter_request" class="modal medium">
+				<p class="layer-title">뉴스레터 신청</p>
+				<div class="layer-contents">
+					<div class="newsletter-request-box">
+						<label for="newsletter_request" class="title req">이메일주소</label>
+
+						<input type="text" id="newsletter_request" class="input-text" placeholder="sample@sample.com" style="ime-mode:disabled">
+
+						<p class="reset">
+							<input type="checkbox" id="check_agree" value="Y">
+							<label for="check_agree">수신동의</label>
+						</p>
+
+						<p class="reset">
+							* 수신 미동의 시 뉴스레터 신청 서비스에 제한이 있습니다.
+						</p>
+					</div>
+
+					<div class="button-group">
+						<a href="" rel="modal:close"  class="button navy">취소</a>
+						<button type="button" class="button blue" onClick="fn_saveNewsLetter();">신청</button>
+					</div>
+				</div>
+			</div>
+			<!-- // 2020-02-19 뉴스레터 신청 레이어 팝업 -->
+		</div>
+		
+		<div class="footer-link">
+			<ul class="list">
+				<li><a title="새 창으로 이용약관 열기" href="/ugs/selectPortalPolicyView.do#use_stplat" target="_blank">이용약관</a></li>
+				<li class="privacy"><a title="새 창으로 개인정보처리방침 열기" href="/ugs/selectPortalPolicyView.do#indvdlinfo_process" target="_blank">개인정보처리방침</a></li>
+				<li><a title="새 창으로 공공데이터포털 소개 열기" href="/ugs/selectPortalInfoView.do#portal_info" target="_blank">공공데이터포털 소개</a></li>
+				<li><a title="분쟁조정신청 바로가기" href="/tcs/dor/insertTrublMdatReqstProcssView.do">분쟁조정신청</a></li>
+			</ul>
+			<p class="txt">
+				개인정보분야별책임자 : 최시복
+			</p>
+			
+			<div class="site-select">
+				<select class="selectSiteList" title="관련사이트 선택">
+					<option value="http://www.gov.kr/">정부24</option>
+					<option value="http://www.mois.go.kr/">행정안전부</option>
+					<option value="http://www.odsc.go.kr/">공공데이터전략위원회</option>
+					<option value="http://www.odmc.or.kr/">공공데이터제공분쟁조정위원회</option>
+					<option value="http://www.opensquared.org/">오픈스퀘어-D</option>
+					<option value="http://odf.or.kr/">오픈데이터포럼</option>
+					<option value="http://www.bigdata.go.kr/">공공빅데이터포털</option>
+					<option value="https://www.open.go.kr/">대한민국 정보공개</option>
+					<option value="https://blog.naver.com/nia_korea/">공공데이터포털 블로그</option>
+					<option value="http://www.riss.kr/index.do">공공데이터 학술정보</option>
+					<option value="https://kosis.kr">KOSIS국가통계포털</option>
+				</select>
+				
+				<button type="button" title="새창 열림" class="btnGoSite button">이동</button>
+			</div>
+		</div>
+		
+		<div class="footer-info">
+			<div class="logo">
+				<a href="https://www.mois.go.kr/" target="_blank" title="새창 열림"><img src="./images/biz/common/logo/logo-footer-01.png" alt="행정안전부" /></a>
+
+			</div>
+			
+			<div class="address">
+				<div>
+					<p>(30116) 세종특별자치시 한누리대로 411(어진동, 행정안전부 별관) </p>
+					<p class="tel">대표번호 : <a title="바로 전화 걸기" href="tel:1566-0025">1566-0025</a></p>
+					<p>문의시간 : 09:00~18:00 (월~금)</p>
+
+				</div>
+				<div>
+					<p>ⓒ행정안전부. All rights reserved.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script type="text/javascript">
+
+	/*
+	 * 사이트 이동 버튼 클릭
+	*/
+	$(".btnGoSite").click( function(e) {
+		var url = $('.selectSiteList').val();
+		if(url != "#") {
+			var w = window.open( url, '_blank');
+			w.document.title = "새창";
+		}
+	});
+	
+	/*
+	 * 뉴스레터 신청
+	*/
+	function fn_saveNewsLetter(){
+		
+		//이메일 입력확인
+		if(fn_empty($("#newsletter_request").val())){
+			alert("이메일 주소는 필수입력 항목입니다.");
+			$("#newsletter_request").focus();
+	        return;
+		}
+		
+		//이메일 형식 확인
+		var regExp = fn_regExp("email");
+		if ( !regExp.test($("#newsletter_request").val()) ) {
+			alert("이메일주소를 올바르게 입력해주세요.");
+			$("#newsletter_request").focus();
+			return;
+		}
+		
+		if(fn_empty($("#check_agree").val()) || !$("#check_agree").is(":checked")){
+			alert("이메일 수신에 동의하셔야 뉴스레터를 신청하실 수 있습니다.");
+			$("#check_agree").focus();
+	        return;
+		}
+		
+		if(confirm("뉴스레터를 신청하시겠습니까?")){
+			$.ajax({
+				type:"POST",
+				url: '/insertNewsLetterUser.json',
+				data : {userEmail : $("#newsletter_request").val(), agreeYn : $("#check_agree").val()} ,
+				dataType : "json",
+				traditional : true,
+				success: function(result){
+					if(result.status){
+						if(result.duplUserAt){
+							alert("이미 뉴스레터 신청이 완료된 이메일주소를 입력하셨습니다.\n다른 이메일주소를 입력해주세요.");
+							return;
+						}else{
+							alert("뉴스레터 신청이 완료되었습니다.");
+							$("#newsletter_request").val("");
+							$("#check_agree").removeProp("checked");
+							$.modal.close();
+						}
+					}else{
+						alert("뉴스레터 신청 중 오류가 발생하였습니다.");
+						return;
+					}
+				},
+				error: function(xhr, status, error) {
+					alert("뉴스레터 신청 중 오류가 발생하였습니다.");
+					return;
+				}
+			});
+		}
+	}
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-48044318-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-48044318-2');
+</script>
+<!--// footer -->
+		</div>
+	</body>
+</html>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.poli_person_mng.code'>
+	
+	<insert id="insertCmmnCodeInfo" parameterType="cmmnMap">
+	/* system.poli_person_mng.code.insertCmmnCodeInfo */
+		INSERT INTO kcgbd.t_poli_person_code_mng(
+			code_grp_id
+			,code_idx
+			,code
+			,code_nm
+			,use_yn
+			,cat1
+			,cat2
+			,cat3
+			,cat4
+			,cat5
+			,cat_nm_1
+			,cat_nm_2
+			,cat_nm_3
+			,cat_nm_4
+			,cat_nm_5
+			,cat6
+			,cat_nm_6
+		)
+		VALUES(
+			#{code_grp_id}
+			,#{code_idx}
+			,#{code}
+			,#{code_nm}
+			,#{use_yn}
+			,#{cat1}
+			,#{cat2}
+			,#{cat3}
+			,#{cat4}
+			,#{cat5}
+			,#{cat_nm_1}
+			,#{cat_nm_2}
+			,#{cat_nm_3}
+			,#{cat_nm_4}
+			,#{cat_nm_5}
+			,#{cat6}
+			,#{cat_nm_6}
+		)
+	
+	</insert>
+	
+	<update id="updateCmmnCodeInfo" parameterType="cmmnMap">
+	/* system.poli_person_mng.code.updateCmmnCodeInfo */
+		UPDATE kcgbd.t_poli_person_code_mng SET
+			code_nm = #{code_nm}
+			,use_yn = #{use_yn}
+			,cat_nm_1 = #{cat_nm_1}
+			,cat_nm_2 = #{cat_nm_2}
+			,cat_nm_3 = #{cat_nm_3}
+			,cat_nm_4 = #{cat_nm_4}
+			,cat_nm_5 = #{cat_nm_5}
+		WHERE 1=1
+			AND code_idx = #{code_idx}
+	</update>
+	
+	<update id="updateReportInfo" parameterType="cmmnMap">
+	/* system.poli_person_mng.code.updateReportInfo */
+		UPDATE kcgbd.t_poli_person_report SET
+			${target_cd_nm} = #{code_nm}
+		WHERE 1=1
+			AND ${target_cd} = #{code}
+	</update>
+	
+	<select id="getCdMngList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.poli_person_mng.code.getCdMngList */
+		SELECT 
+			 pcm.code_grp_id
+			,pcm.code_idx
+			,pcm.code
+			,pcm.code_nm
+			,pcm.use_yn
+			,pcm.del_yn
+			,pcm.cat1
+			,pcm.cat_nm_1
+			,pcm.cat2
+			,pcm.cat_nm_2
+			,pcm.cat3
+			,pcm.cat_nm_3
+			,pcm.cat4
+			,pcm.cat_nm_4
+			,pcm.cat5
+			,pcm.cat_nm_5
+			,pcm.cat6
+			,pcm.cat_nm_6
+			,pcm.pt_idx
+		FROM kcgbd.t_poli_person_code_mng pcm
+		WHERE 1=1
+			AND pcm.code_grp_id = #{code_grp_id}
+		<if test='cat1 != null and cat1 != ""'>
+			AND pcm.cat1 = #{cat1}
+		</if>
+		<if test='cat2 != null and cat2 != ""'>
+			AND pcm.cat2 = #{cat2}
+		</if>
+		<if test='cat3 != null and cat3 != ""'>
+			AND pcm.cat3 = #{cat3}
+		</if>
+		<if test='cat4 != null and cat4 != ""'>
+			AND pcm.cat4 = #{cat4}
+		</if>
+		<if test='cat5 != null and cat5 != ""'>
+			AND pcm.cat5 = #{cat5}
+		</if>
+		ORDER BY cat_nm_1, cat_nm_2, cat_nm_3, cat_nm_4, cat_nm_5, cat_nm_6
+	</select>
+	
+	<select id="chkChildExist" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.poli_person_mng.code.chkChildExist */
+	 	SELECT
+	 		COUNT(*) cnt
+	 	FROM 
+	 		kcgbd.t_poli_person_code_mng A
+	 	WHERE 1=1
+	 		AND A.code != #{code}
+	 		AND (
+	 			A.cat1 like CONCAT('%', #{code},'%')
+	 			OR A.cat2 like CONCAT('%', #{code},'%')
+	 			OR A.cat3 like CONCAT('%', #{code},'%')
+	 			OR A.cat4 like CONCAT('%', #{code},'%')
+	 			OR A.cat5 like CONCAT('%', #{code},'%')
+	 			OR A.cat6 like CONCAT('%', #{code},'%')
+	 		)
+	
+	</select>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	/* system.poli_person_mng.code.deleteInfo */
+		DELETE FROM kcgbd.t_poli_person_code_mng
+		WHERE 1=1
+			AND code_idx = #{code_idx}
+	</delete>
+	
+</mapper>

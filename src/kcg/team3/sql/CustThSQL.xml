@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='kcg.team3'>
+
+	<!-- 고객 정보 관리 -->
+	<select id="getUserIds" resultType="cmmnMap">
+		select user_id from
+		kcgbd.t_user
+	</select>
+
+	<!-- 고객 정보 조회 페이징 -->
+	<select id="getCustListWithPaging" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		select * from tb3_cust
+		WHERE 1=1
+		<if test="cust_code != null and cust_code != ''">
+			AND cust_code = #{cust_code}
+		</if>
+		<if test="cust_name != null and cust_name != ''">
+			AND cust_name = #{cust_name}
+		</if>
+		<if test="cust_phonenum != null and cust_phonenum != ''">
+			AND cust_phonenum = #{cust_phonenum}
+		</if>
+		<if test="user_id != null and user_id != ''">
+			AND user_id = #{user_id}
+		</if>
+		<if test="cust_birth != null and cust_birth != ''">
+			AND cust_birth = #{cust_birth}
+		</if>
+		<if test="cust_state != null">
+			<if test="cust_state == '가입상태'">
+				AND cust_state = '1'
+			</if>
+			<if test="cust_state == '탈퇴상태'">
+				AND cust_state = '2'
+			</if>
+		</if>
+		ORDER BY cust_code desc
+		LIMIT #{pageSize} OFFSET #{offset}
+	</select>
+
+	<!-- v필터링된 데이터 총 개수 가져오기 -->
+	<select id="getFilteredCustCount" parameterType="cmmnMap"
+		resultType="int">
+		select count(*) from tb3_cust
+		where 1=1
+		<if test="cust_code != null and cust_code != ''">
+			AND cust_code = #{cust_code}
+		</if>
+		<if test="cust_name != null and cust_name != ''">
+			AND cust_name = #{cust_name}
+		</if>
+		<if test="cust_phonenum != null and cust_phonenum != ''">
+			AND cust_phonenum = #{cust_phonenum}
+		</if>
+		<if test="user_id != null and user_id != ''">
+			AND user_id = #{user_id}
+		</if>
+		<if test="cust_birth != null and cust_birth != ''">
+			AND cust_birth = #{cust_birth}
+		</if>
+		<if test="cust_state != null">
+			<if test="cust_state == '가입상태'">
+				AND cust_state = '1'
+			</if>
+			<if test="cust_state == '탈퇴상태'">
+				AND cust_state = '2'
+			</if>
+		</if>
+	</select>
+
+	<!-- 특정 관리자가 담당하는 고객들 조회 -->
+	<select id="getAssignedCustomers" parameterType="String"
+		resultType="cmmnMap">
+		select *
+		from tb3_cust
+		where user_id = #{user_id}
+	</select>
+
+	<!-- 고객 정보 수정 -->
+	<update id="custModify" parameterType="map">
+		update tb3_cust
+		set
+		cust_name = #{cust_name},
+		cust_birth = #{cust_birth},
+		cust_phonenum =
+		#{cust_phonenum},
+		cust_gen = #{cust_gen},
+		cust_type = #{cust_type},
+		user_id = #{user_id},
+		cust_state = #{cust_state},
+		cust_updated_at =
+		#{cust_updated_at}
+		where cust_code = #{cust_code}
+	</update>
+
+	<!-- 전화번호 중복 확인 -->
+	<select id="checkPhoneNumber" parameterType="String"
+		resultType="cmmnMap">
+		SELECT cust_phonenum FROM tb3_cust WHERE cust_phonenum =
+		#{cust_phonenum}
+	</select>
+
+	<!-- 고객 정보 등록 -->
+	<insert id="custInsert" parameterType="cmmnMap">
+		insert into tb3_cust
+		(user_id, cust_name, cust_birth, cust_phonenum, cust_gen, cust_type,
+		cust_created_at, cust_updated_at, cust_state)
+		values(#{user_id},#{cust_name},#{cust_birth},#{cust_phonenum},#{cust_gen},#{cust_type},#{cust_created_at},#{cust_updated_at},
+		#{cust_state})
+	</insert>
+
+	<!-- 고객 상담 내역 -->
+	<select id="custConsult" parameterType="int"
+		resultType="cmmnMap">
+		select *
+		from tb3_consult
+		where cust_code=#{cust_code}
+	</select>
+
+	<!-- 고객 상담 등록 -->
+	<insert id="insertConsultation" parameterType="cmmnMap">
+		insert into
+		tb3_consult (user_id, cust_code, consult_created_at,
+		consult_updated_at, consult_content)
+		values
+		(#{user_id},#{cust_code},#{consult_created_at},#{consult_updated_at},#{consult_content})
+	</insert>
+	
+	<!-- 고객 이벤트 페이징 : 7월 19일 수정됨-->
+   <select id="getEventListWithPaging" parameterType="cmmnMap"
+      resultType="cmmnMap">
+      WITH event_info AS (
+      SELECT
+      pl.plan_code,
+      c.cust_code,
+      c.cust_name,
+      c.cust_phonenum,
+      c.cust_birth,
+      p.prod_name,
+      CASE
+      WHEN to_char(c.cust_birth::date, 'MM-DD') = to_char(now(),
+      'MM-DD') THEN
+      'birthday'
+      WHEN p.prod_name like '%적금%' THEN 'event1'
+      WHEN p.prod_name like '%예금%' THEN 'event2'
+      WHEN p.prod_name like '%챌린지%' THEN 'event3'
+      ELSE p.prod_name || ' 만기'
+      END AS event_type,
+      CASE
+      WHEN
+      pl.plan_term = '1' THEN pl.plan_created_at + INTERVAL '1 year'
+      WHEN
+      pl.plan_term = '2' THEN pl.plan_created_at + INTERVAL '2 years'
+      WHEN
+      pl.plan_term = '8' THEN pl.plan_created_at + INTERVAL '8 weeks'
+      ELSE
+      NULL
+      END AS event_date
+      FROM
+      tb3_cust c
+      LEFT JOIN tb3_plan pl ON
+      c.cust_code = pl.cust_code
+      LEFT JOIN tb3_product p ON pl.prod_code =
+      p.prod_code
+      )
+      SELECT
+      plan_code,
+      cust_code,
+      cust_name,
+      cust_phonenum,
+      cust_birth,
+      prod_name,
+      event_type,
+      TO_CHAR(event_date, 'YYYY-MM-DD') AS event_date
+      FROM event_info
+      WHERE event_type IS NOT
+      NULL AND
+      event_date IS NOT NULL
+      <if test="cust_code != null and cust_code != ''">
+         AND cust_code::text LIKE '%' || #{cust_code} || '%'
+      </if>
+      <if test="cust_name != null and cust_name != ''">
+         AND cust_name LIKE '%' || #{cust_name} || '%'
+      </if>
+      <if test="event_type != null">
+         <if test="event_type == '적금'">
+            AND event_type = 'event1'
+         </if>
+         <if test="event_type == '예금'">
+            AND event_type = 'event2'
+         </if>
+         <if test="event_type == '챌린지'">
+            AND event_type = 'event3'
+         </if>
+         <if test="event_type == '생일'">
+            AND event_type = 'birthday'
+         </if>
+      </if>
+      ORDER BY ABS(DATE_PART('day', event_date - now()))
+      LIMIT #{pageSize}
+      OFFSET #{offset}
+   </select>
+   
+<!-- 고객 이벤트 필터링 : 7월 19일 수정됨 -->
+   <select id="getFilterEventCount" parameterType="cmmnMap"
+      resultType="int">
+      WITH event_info AS (
+      SELECT
+      pl.plan_code,
+      c.cust_code,
+      c.cust_name,
+      c.cust_phonenum,
+      c.cust_birth,
+      p.prod_name,
+      CASE
+      WHEN to_char(c.cust_birth::date, 'MM-DD') = to_char(now(),
+      'MM-DD') THEN
+      'birthday'
+      WHEN p.prod_name like '%적금%' THEN 'event1'
+      WHEN p.prod_name like '%예금%' THEN 'event2'
+      WHEN p.prod_name like '%챌린지%' THEN 'event3'
+      ELSE p.prod_name || ' 만기'
+      END AS event_type,
+      CASE
+      WHEN
+      pl.plan_term = '1' THEN pl.plan_created_at + INTERVAL '1 year'
+      WHEN
+      pl.plan_term = '2' THEN pl.plan_created_at + INTERVAL '2 years'
+      WHEN
+      pl.plan_term = '8' THEN pl.plan_created_at + INTERVAL '8 weeks'
+      ELSE
+      NULL
+      END AS event_date
+      FROM
+      tb3_cust c
+      LEFT JOIN tb3_plan pl ON
+      c.cust_code = pl.cust_code
+      LEFT JOIN tb3_product p ON pl.prod_code =
+      p.prod_code
+      )
+      SELECT count(*)
+      FROM event_info
+      WHERE event_type IS NOT
+      NULL AND
+      event_date IS NOT NULL
+      <if test="cust_code != null and cust_code != ''">
+         AND cust_code::text LIKE '%' || #{cust_code} || '%'
+      </if>
+      <if test="cust_name != null and cust_name != ''">
+         AND cust_name LIKE '%' || #{cust_name} || '%'
+      </if>
+      <if test="event_type != null">
+         <if test="event_type == '적금'">
+            AND event_type = 'event1'
+         </if>
+         <if test="event_type == '예금'">
+            AND event_type = 'event2'
+         </if>
+         <if test="event_type == '챌린지'">
+            AND event_type = 'event3'
+         </if>
+         <if test="event_type == '생일'">
+            AND event_type = 'birthday'
+         </if>
+      </if>
+   </select>
+   
+	<!-- 코드로 고객 정보 조회 -->
+	<select id="getCustNameByCustCodeOne" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		SELECT * FROM tb3_cust WHERE cust_code = #{cust_code}
+	</select>
+
+	<!-- 이름으로 고객 정보 조회 -->
+	<select id="getCustByName" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		SELECT * FROM tb3_cust
+		WHERE cust_name = #{cust_name}
+	</select>
+
+
+</mapper>

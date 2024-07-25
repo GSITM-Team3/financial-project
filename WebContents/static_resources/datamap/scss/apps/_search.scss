@@ -1,0 +1,62 @@
+.search-wrap {
+  .form-area {
+    padding-right: 48px;
+  }
+
+
+  .popular-word-wrap {
+    display: flex;
+    justify-content: space-between;
+    @media (max-width: 991px) {
+      display: block;
+    }
+    .popular-word {
+      display: flex;
+      align-self: center;
+      margin-top: 20px;
+
+      .title {
+        margin-right: 20px;
+        min-width: 26px;
+        color: #333;
+        font-weight: 700;
+      }
+      .word {
+        display: inline-block;
+        vertical-align: top;
+        color: #666;
+        margin-right: 20px;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .extra-area {
+      display: flex;
+      margin-top: 20px;
+
+      @media (max-width: 991px) {
+        justify-content: flex-end;
+      }
+
+      a {
+        display: block;
+      }
+
+      //.org-search-btn {
+      //  display: none;
+      //}
+
+      .btn-more-search {
+        color: #077dba;
+        text-decoration: underline;
+      }
+    }
+
+  }
+
+
+}

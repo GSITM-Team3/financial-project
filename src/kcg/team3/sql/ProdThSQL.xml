@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kcg.team3">
+
+	<!-- 상품 리스트 조회 쿼리문 -->
+	<select id="getList" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getList */
+		SELECT prod_code, prod_name,
+		prod_type, prod_subscrip_type, prod_min_amt,prod_max_amt,
+		prod_pay_cy,
+		prod_air, prod_tax_type, prod_sales_state
+		FROM public.tb3_product
+		ORDER
+		BY prod_updated_at DESC
+	</select>
+
+	<!-- 상품 입력 쿼리문 -->
+	<insert id="insertProdInfo" parameterType="cmmnMap">
+		/*
+		kcg.team3.insertProdInfo */
+		INSERT INTO public.tb3_product (
+		prod_name
+		,
+		prod_type
+		, prod_subscrip_type
+		, prod_min_amt
+		, prod_max_amt
+		, prod_pay_cy
+		, prod_air
+		, prod_tax_type
+		, prod_sales_state
+		, prod_created_at
+		,
+		prod_updated_at
+		) VALUES (
+		#{prod_name}
+		, #{prod_type}
+		, #{prod_subscrip_type}
+		, cast(#{prod_min_amt} as numeric(15))
+		, cast(#{prod_max_amt} as numeric(15))
+		, #{prod_pay_cy}
+		, cast(#{prod_air}
+		as numeric(5, 2))
+		, #{prod_tax_type}
+		, #{prod_sales_state}
+		, now()
+		, now()
+		)
+	</insert>
+
+	<!-- 상품 수정 쿼리문 -->
+	<update id="updateProdInfo" parameterType="cmmnMap">
+		/*
+		kcg.team3.updateProdInfo */
+		UPDATE public.tb3_product
+		SET
+		prod_name =
+		#{prod_name},
+		prod_type = #{prod_type},
+		prod_subscrip_type =
+		#{prod_subscrip_type},
+		prod_min_amt = CAST(#{prod_min_amt} AS numeric),
+		prod_max_amt = CAST(#{prod_max_amt} AS numeric),
+		prod_pay_cy =
+		#{prod_pay_cy},
+		prod_air = CAST(#{prod_air} AS numeric),
+		prod_tax_type =
+		#{prod_tax_type},
+		prod_sales_state = #{prod_sales_state},
+		prod_updated_at = now()
+		WHERE prod_code = CAST(#{prod_code} AS INTEGER)
+	</update>
+
+	<!-- 페이징 처리된 상품 목록 조회 쿼리 -->
+	<select id="getProdListWithPaging" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getProdListWithPaging */
+		SELECT prod_code,
+		prod_name, prod_type, prod_subscrip_type, prod_min_amt,
+		prod_max_amt,
+		prod_pay_cy, prod_air, prod_tax_type, prod_sales_state
+		FROM
+		public.tb3_product
+		ORDER BY prod_updated_at DESC
+		LIMIT #{pageSize}
+		OFFSET #{offset}
+	</select>
+
+	<!-- 페이징 + 필터링 처리된 상품 목록 조회 쿼리 / 240719 -->
+	<select id="getProdListWithFilterAndPaging"
+		parameterType="cmmnMap" resultType="cmmnMap">
+		/* kcg.team3.getProdListWithFilterAndPaging */
+		SELECT prod_code,
+		prod_name, prod_type, prod_subscrip_type, prod_min_amt,
+		prod_max_amt,
+		prod_pay_cy, prod_air, prod_tax_type, prod_sales_state
+		FROM
+		public.tb3_product
+		where 1=1
+		<if test="prod_name != null and prod_name != ''">
+			and prod_name = #{prod_name}
+		</if>
+		<if test="prod_sales_state != null and prod_sales_state != ''">
+			and prod_sales_state = #{prod_sales_state}
+		</if>
+		<if test="prod_pay_cy != null and prod_pay_cy != ''">
+			and prod_pay_cy = #{prod_pay_cy}
+		</if>
+		<if
+			test="prod_subscript_type != null and prod_subscript_type != ''">
+			and prod_subscript_type = #{prod_subscript_type}
+		</if>
+		ORDER BY prod_updated_at DESC
+		LIMIT #{pageSize}
+		OFFSET #{offset}
+	</select>
+
+	<!-- 필터링된 데이터의 총 개수 -->
+	<select id="getFilteredProdCount" parameterType="cmmnMap"
+		resultType="int">
+		/* kcg.team3.getFilteredProdCount */
+		select count(*)
+		from
+		public.tb3_product
+		where 1=1
+		<if test="prod_name != null and prod_name != ''">
+			and prod_name = #{prod_name}
+		</if>
+		<if test="prod_sales_state != null and prod_sales_state != ''">
+			and prod_sales_state = #{prod_sales_state}
+		</if>
+		<if test="prod_pay_cy != null and prod_pay_cy != ''">
+			and prod_pay_cy = #{prod_pay_cy}
+		</if>
+		<if
+			test="prod_subscript_type != null and prod_subscript_type != ''">
+			and prod_subscript_type = #{prod_subscript_type}
+		</if>
+	</select>
+
+	<!-- 상품 하나 쿼리문 -->
+	<select id="getNotigetProductNameByProdCodeceOne"
+		parameterType="cmmnMap" resultType="cmmnMap">
+		/*
+		kcg.team3.getNotigetProductNameByProdCodeceOne */
+		SELECT prod_name,
+		prod_type,
+		prod_min_amt,prod_max_amt, prod_pay_cy, prod_air,
+		prod_tax_type,
+		prod_sales_state
+		FROM public.tb3_product
+		where prod_code =
+		#{prod_code};
+	</select>
+
+	<!-- 상품코드로 이름검색 쿼리문 -->
+	<select id="getProductNameByProdCodeOne" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		/* kcg.team3.getNotigetProductNameByProdCodeceOne */
+		SELECT
+		prod_name, prod_type, prod_min_amt,prod_max_amt,
+		prod_pay_cy, prod_air,
+		prod_tax_type, prod_sales_state
+		FROM public.tb3_product
+		WHERE prod_code
+		= #{prod_code};
+	</select>
+
+	<!-- 상품이름으로 코드 검색하기 -->
+	<select id="getProductByName" parameterType="cmmnMap"
+		resultType="cmmnMap">
+		SELECT prod_code,prod_name, prod_type,
+		prod_min_amt,prod_max_amt,
+		prod_pay_cy, prod_air, prod_tax_type,
+		prod_sales_state
+		FROM
+		public.tb3_product
+		WHERE prod_name = #{prod_name};
+	</select>
+	<!-- 메인용 top 3 쿼리문 -->
+	<select id="getProdForMainLimit3" resultType="cmmnMap">
+		/*
+		kcg.team3.getProdForMainLimit3 */
+		SELECT prod_code, prod_name,
+		prod_type, prod_subscrip_type, prod_min_amt,prod_max_amt,
+		prod_pay_cy,
+		prod_air, prod_tax_type, prod_sales_state
+		FROM public.tb3_product
+		ORDER
+		BY prod_air DESC
+		LIMIT 3
+
+	</select>
+
+</mapper>

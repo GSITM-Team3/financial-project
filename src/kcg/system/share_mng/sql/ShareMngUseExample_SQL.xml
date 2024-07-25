@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='share.mng.use.example'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* share.mng.use.example.getList */
+		SELECT 
+			A.idx
+			,A.sbjt
+			,A.cat
+			,A.svc_desc
+			,A.use_tgt
+			,A.atch_file_1
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_1) atch_file_1_nm
+			,A.atch_file_2
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_2) atch_file_2_nm
+			,A.atch_file_3
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_3) atch_file_3_nm
+			,A.atch_file_4
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_4) atch_file_4_nm
+			,A.atch_file_5
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_5) atch_file_5_nm
+			,A.read_cnt
+			,A.reg_dt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd hh24:mi') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd hh24:mi') updt_dt_char
+			,A.reg_user_id
+			,USR.name reg_user_name
+		FROM 
+			kcgbd.t_use_sample A
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = A.reg_user_id
+		<if test='search_val != ""'>
+			<if test='search_nm == "sbjt"'>
+				AND A.SBJT like concat('%',#{search_val},'%')
+			</if>
+			<if test='search_nm == "reg_user_name"'>
+				AND USR.name like concat('%',#{search_val},'%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* share.mng.use.example.getInfo */
+		SELECT 
+			A.idx
+			,A.sbjt
+			,A.cat
+			,A.svc_desc
+			,A.use_tgt
+			,A.ctnt
+			,A.atch_file_1
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_1) atch_file_1_nm
+			,A.atch_file_2
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_2) atch_file_2_nm
+			,A.atch_file_3
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_3) atch_file_3_nm
+			,A.atch_file_4
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_4) atch_file_4_nm
+			,A.atch_file_5
+			,(SELECT org_file_nm FROM kcgbd.t_cmmn_file_info WHERE stor_file_nm = A.atch_file_5) atch_file_5_nm
+			,A.read_cnt
+			,A.reg_dt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd hh24:mi') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd hh24:mi') updt_dt_char
+			,A.reg_user_id
+			,USR.name reg_user_name
+		FROM 
+			kcgbd.t_use_sample A
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = A.reg_user_id
+			AND idx = #{idx}
+	</select>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* share.mng.use.example.updateInfo */
+		UPDATE kcgbd.t_use_sample
+		SET 
+			sbjt = #{sbjt}
+			,cat = #{cat}
+			,svc_desc = #{svc_desc}
+			,use_tgt = #{use_tgt}
+			,ctnt = #{ctnt}
+			,atch_file_1 = #{atch_file_1}
+			,atch_file_2 = #{atch_file_2}
+			,atch_file_3 = #{atch_file_3}
+			,atch_file_4 = #{atch_file_4}
+			,atch_file_5 = #{atch_file_5}
+			,updt_dt = NOW()
+			,updt_user_id = #{user_id}
+		WHERE idx = #{idx}
+	</update>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	/* share.mng.use.example.deleteInfo */
+		DELETE FROM kcgbd.t_use_sample
+		WHERE idx = #{idx}
+	</delete>
+	
+	<insert id="insertInfo" parameterType="cmmnMap">
+	/* share.mng.use.example.insertInfo */
+		INSERT INTO kcgbd.t_use_sample(
+			idx
+			,sbjt
+			,cat
+			,svc_desc
+			,use_tgt
+			,ctnt
+			,atch_file_1
+			,atch_file_2
+			,atch_file_3
+			,atch_file_4
+			,atch_file_5
+			,read_cnt
+			,reg_dt
+			,updt_dt
+			,reg_user_id
+			,updt_user_id
+		)VALUES(
+			#{idx}
+			,#{sbjt}
+			,#{cat}
+			,#{svc_desc}
+			,#{use_tgt}
+			,#{ctnt}
+			,#{atch_file_1}
+			,#{atch_file_2}
+			,#{atch_file_3}
+			,#{atch_file_4}
+			,#{atch_file_5}
+			,'0'
+			,NOW()
+			,NOW()
+			,#{user_id}
+			,#{user_id}
+		)
+	</insert>
+	
+	<select id="getExtUseDataList" resultType="cmmnMap" parameterType="cmmnMap">
+	/* share.mng.use.example.getExtUseDataList */
+		SELECT
+			MAX(A.docid)                        AS docid
+			, MAX(A.doctitle)                   AS doctitle
+			, MAX(A.doctitleeng)                AS doctitleeng
+			, MAX(A.doccontent)                 AS doccontent
+			, MAX(A.searchkeyword)              AS searchkeyword
+			, MAX(A.provdtrgetse)               AS provdtrgetse
+			, MAX(A.provdreqstregistat)         AS provdreqstregistat
+			, MAX(A.evlavg)                     AS evlavg
+			, MAX(A.registco)                   AS registco
+			, MAX(A.viewcount)                  AS viewcount
+			, MAX(A.brmcode)                    AS brmcode
+			, MAX(A.brmcodenm)                  AS brmcodenm
+			, MAX(A.brmncd)                     AS brmncd
+			, MAX(A.brmnnm)                     AS brmnnm
+			, MAX(A.listregisttypecode)         AS listregisttypecode
+			, MAX(A.registdt)                   AS registdt
+			, MAX(A.updtdt)                     AS updtdt
+			, MAX(A.dncnt)                      AS dncnt
+			, MAX(A.dataty)                     AS dataty
+			, MAX(A.detailscrinurl)             AS detailscrinurl
+			, MAX(A.insttcode)                  AS insttcode
+			, MAX(A.insttnm)                    AS insttnm
+			, MAX(B.dataurl)                    AS dataurl
+			, MAX(B.datanm)                     AS datanm
+			, UPPER(MAX(B.atchfileextsn))		AS atchfileextsn
+		FROM 
+			kcgbd.st_getportalopenapilist A
+			,kcgbd.st_getfiledatalist B
+		WHERE 1=1
+			AND A.docid = B.docid
+			AND B.datanm IS NOT NULL
+		<if test="keyword != null and keyword != ''">
+			AND A.doctitle ILIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="docid != null and docid != ''">
+			AND A.docid = #{docid}
+		</if>
+		GROUP BY A.docid
+	</select>
+	
+	<select id="getInUseDataList" resultType="cmmnMap" parameterType="cmmnMap">
+	/* share.mng.use.example.getInUseDataList */
+		SELECT 
+			A.sys_nm
+			,B.cnnc_manage_no
+			,B.db_table_id
+			,B.table_eng_nm
+			,B.table_korean_nm
+			,B.table_dc
+			,B.br_dc
+			,B.hashtag_cn
+			,COUNT(C.db_table_id)	AS column_cnt
+			,A.hive_db_nm
+			,B.hive_table_nm
+		    ,D.accumulated_records
+		FROM 
+			kcgbd.t_rule_meta_0001 A
+			LEFT OUTER JOIN kcgbd.t_rule_meta_0002 B ON A.cnnc_manage_no = B.cnnc_manage_no
+			LEFT OUTER JOIN kcgbd.t_rule_meta_0003 C ON B.db_table_id = C.db_table_id
+		    LEFT OUTER JOIN kcgbd.t_batch_result_0003 D ON B.table_eng_nm = D.table_eng_nm 
+		    ,(
+		        SELECT planned_dt FROM kcgbd.t_batch_date_0001
+		        WHERE flag = 0
+		        ORDER BY planned_dt DESC
+		        LIMIT 1
+		      ) E
+		WHERE 1=1
+			AND A.applc_se_code = '01'
+           	AND B.bigdata_gtrn_at = 'Y'
+		<if test="cnnc_manage_no != null and cnnc_manage_no != ''">
+			AND B.cnnc_manage_no = #{cnnc_manage_no}
+		</if>
+		<if test="table_eng_nm != null and table_eng_nm != ''">
+			AND B.table_eng_nm = #{table_eng_nm}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND (B.table_korean_nm ILIKE '%' || #{keyword} || '%'
+					OR B.table_eng_nm ILIKE '%' || #{keyword} || '%'
+					OR B.hashtag_cn ILIKE '%' || #{keyword} || '%'
+					OR C.table_korean_atrb_nm ILIKE '%' || #{keyword} || '%'
+					OR C.table_atrb_eng_nm ILIKE '%' || #{keyword} || '%')
+		</if>
+			AND D.planned_dt = E.planned_dt
+		GROUP BY
+			A.sys_nm, B.cnnc_manage_no, B.table_eng_nm, A.hive_db_nm, D.accumulated_records
+		ORDER BY B.table_korean_nm
+	</select>
+	
+</mapper>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.poli_person_mng'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.poli_person_mng.code.getList */
+		SELECT 
+			A.idx
+			,coalesce(A.cat_cd_1, '') as cat_cd_1
+			,coalesce(A.cat_nm_1, '') as cat_nm_1
+			,coalesce(A.cat_cd_2, '') as cat_cd_2
+			,coalesce(A.cat_nm_2, '') as cat_nm_2
+			,coalesce(A.cat_cd_3, '') as cat_cd_3
+			,coalesce(A.cat_nm_3, '') as cat_nm_3
+			,coalesce(A.cat_cd_4, '') as cat_cd_4
+			,coalesce(A.cat_nm_4, '') as cat_nm_4
+			,coalesce(A.cat_cd_5, '') as cat_cd_5
+			,coalesce(A.cat_nm_5, '') as cat_nm_5
+			,coalesce(A.cat_cd_6, '') as cat_cd_6
+			,coalesce(A.cat_nm_6, '') as cat_nm_6
+			,coalesce(A.jikgun_cd, '') as jikgun_cd
+			,coalesce(A.jikgun_nm, '') as jikgun_nm
+			,coalesce(A.jikgub_cd, '') as jikgub_cd
+			,coalesce(A.jikgub_nm, '') as jikgub_nm
+			,coalesce(A.pos_cd, '') as pos_cd
+			,coalesce(A.pos_nm, '') as pos_nm
+			,coalesce(A.fdept_cd, '') as fdept_cd
+			,coalesce(A.fdept_nm, '') as fdept_nm
+			,A.reg_dt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd') updt_dt_char
+			,A.now_psn
+			,A.tot_psn
+			,A.assn_psn
+			,A.code
+		FROM kcgbd.t_poli_person_report A
+		WHERE 1=1
+		<if test='cat_cd_1 != ""'>
+			AND A.cat_cd_1 = #{cat_cd_1}
+		</if>
+		<if test='cat_cd_2 != ""'>
+			AND A.cat_cd_2 = #{cat_cd_2}
+		</if>
+		<if test='cat_cd_3 != ""'>
+			AND A.cat_cd_3 = #{cat_cd_3}
+		</if>
+		<if test='cat_cd_4 != ""'>
+			AND A.cat_cd_4 = #{cat_cd_4}
+		</if>
+		<if test='cat_cd_5 != ""'>
+			AND A.cat_cd_5 = #{cat_cd_5}
+		</if>
+		<if test='cat_cd_6 != ""'>
+			AND A.cat_cd_6 = #{cat_cd_6}
+		</if>
+		<if test='jikgun_cd != ""'>
+			AND A.jikgun_cd = #{jikgun_cd}
+		</if>
+		<if test='jikgub_cd != ""'>
+			AND A.jikgub_cd = #{jikgub_cd}
+		</if>
+		<if test='pos_cd != ""'>
+			AND A.pos_cd = #{pos_cd}
+		</if>
+		<if test='fdept_cd != ""'>
+			AND A.fdept_cd = #{fdept_cd}
+		</if>
+		<if test='search_val != ""'>
+			AND (A.cat_nm_1 ILIKE '%' || #{search_val} || '%'
+				OR A.cat_nm_2 ILIKE '%' || #{search_val} || '%'
+				OR A.cat_nm_3 ILIKE '%' || #{search_val} || '%'
+				OR A.cat_nm_4 ILIKE '%' || #{search_val} || '%'
+				OR A.cat_nm_5 ILIKE '%' || #{search_val} || '%'
+				OR A.cat_nm_6 ILIKE '%' || #{search_val} || '%'
+				OR A.jikgun_nm ILIKE '%' || #{search_val} || '%'
+				OR A.jikgub_nm ILIKE '%' || #{search_val} || '%'
+				OR A.pos_nm ILIKE '%' || #{search_val} || '%'
+				OR A.fdept_nm ILIKE '%' || #{search_val} || '%'
+			)
+		</if>
+		
+	</select>
+		
+	<select id="getInfo" parameterType="string" resultType="cmmnMap">
+	/* system.poli_person_mng.code.getInfo */
+		SELECT 
+			A.idx
+			,coalesce(A.cat_cd_1, '') as cat_cd_1
+			,coalesce(A.cat_nm_1, '') as cat_nm_1
+			,coalesce(A.cat_cd_2, '') as cat_cd_2
+			,coalesce(A.cat_nm_2, '') as cat_nm_2
+			,coalesce(A.cat_cd_3, '') as cat_cd_3
+			,coalesce(A.cat_nm_3, '') as cat_nm_3
+			,coalesce(A.cat_cd_4, '') as cat_cd_4
+			,coalesce(A.cat_nm_4, '') as cat_nm_4
+			,coalesce(A.cat_cd_5, '') as cat_cd_5
+			,coalesce(A.cat_nm_5, '') as cat_nm_5
+			,coalesce(A.cat_cd_6, '') as cat_cd_6
+			,coalesce(A.cat_nm_6, '') as cat_nm_6
+			,coalesce(A.jikgun_cd, '') as jikgun_cd
+			,coalesce(A.jikgun_nm, '') as jikgun_nm
+			,coalesce(A.jikgub_cd, '') as jikgub_cd
+			,coalesce(A.jikgub_nm, '') as jikgub_nm
+			,coalesce(A.pos_cd, '') as pos_cd
+			,coalesce(A.pos_nm, '') as pos_nm
+			,coalesce(A.fdept_cd, '') as fdept_cd
+			,coalesce(A.fdept_nm, '') as fdept_nm
+			,A.reg_dt
+			,A.updt_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd') reg_dt_char
+			,to_char(A.updt_dt, 'yyyy-mm-dd') updt_dt_char
+			,A.now_psn
+			,A.tot_psn
+			,A.assn_psn
+			,A.code
+		FROM kcgbd.t_poli_person_report A
+		WHERE 1=1
+			AND A.code = #{code}
+	</select>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* system.poli_person_mng.code.updateCmndCdStts */
+		UPDATE kcgbd.t_poli_person_report
+		SET 
+			now_psn = #{now_psn}
+			,tot_psn = #{tot_psn}
+			,assn_psn = #{assn_psn}
+			,updt_dt = NOW()
+		WHERE idx = #{idx}
+	</update>
+	
+	
+	<insert id="insertInfo" parameterType="cmmnMap">
+	/* system.poli_person_mng.code.insertInfo */
+		INSERT INTO kcgbd.t_poli_person_report(
+			idx
+			,cat_cd_1
+			,cat_nm_1
+			,cat_cd_2
+			,cat_nm_2
+			,cat_cd_3
+			,cat_nm_3
+			,cat_cd_4
+			,cat_nm_4
+			,cat_cd_5
+			,cat_nm_5
+			,cat_cd_6
+			,cat_nm_6
+			,jikgun_cd
+			,jikgun_nm
+			,jikgub_cd
+			,jikgub_nm
+			,pos_cd
+			,pos_nm
+			,fdept_cd
+			,fdept_nm
+			,reg_dt
+			,updt_dt
+			,now_psn
+			,tot_psn
+			,assn_psn
+			,code
+		)VALUES(
+			#{idx}
+			,#{cat_cd_1}
+			,#{cat_nm_1}
+			,#{cat_cd_2}
+			,#{cat_nm_2}
+			,#{cat_cd_3}
+			,#{cat_nm_3}
+			,#{cat_cd_4}
+			,#{cat_nm_4}
+			,#{cat_cd_5}
+			,#{cat_nm_5}
+			,#{cat_cd_6}
+			,#{cat_nm_6}
+			,#{jikgun_cd}
+			,#{jikgun_nm}
+			,#{jikgub_cd}
+			,#{jikgub_nm}
+			,#{pos_cd}
+			,#{pos_nm}
+			,#{fdept_cd}
+			,#{fdept_nm}
+			,NOW()
+			,NOW()
+			,#{now_psn}
+			,#{tot_psn}
+			,#{assn_psn}
+			,#{code}
+			)
+	</insert>
+	
+	<select id="getCdMngList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.poli_person_mng.getCdMngList */
+		SELECT 
+			 pcm.code_grp_id
+			,pcm.code_idx
+			,pcm.code
+			,pcm.code_nm
+			,pcm.use_yn
+			,pcm.del_yn
+			,pcm.cat1
+			,pcm.cat_nm_1
+			,pcm.cat2
+			,pcm.cat_nm_2
+			,pcm.cat3
+			,pcm.cat_nm_3
+			,pcm.cat4
+			,pcm.cat_nm_4
+			,pcm.cat5
+			,pcm.cat_nm_5
+			,pcm.cat6
+			,pcm.cat_nm_6
+			,pcm.pt_idx
+		FROM kcgbd.t_poli_person_code_mng pcm
+		WHERE 1=1
+			AND pcm.use_yn = 'Y'
+			AND pcm.code_grp_id = #{code_grp_id}
+		<if test='cat1 != null and cat1 != ""'>
+			AND pcm.cat1 = #{cat1}
+		</if>
+		<if test='cat2 != null and cat2 != ""'>
+			AND pcm.cat2 = #{cat2}
+		</if>
+		<if test='cat3 != null and cat3 != ""'>
+			AND pcm.cat3 = #{cat3}
+		</if>
+		<if test='cat4 != null and cat4 != ""'>
+			AND pcm.cat4 = #{cat4}
+		</if>
+		<if test='cat5 != null and cat5 != ""'>
+			AND pcm.cat5 = #{cat5}
+		</if>
+		ORDER BY cat_nm_1, cat_nm_2, cat_nm_3, cat_nm_4, cat_nm_5, cat_nm_6
+	</select>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	/* system.poli_person_mng.deleteInfo */
+		DELETE FROM kcgbd.t_poli_person_report
+		WHERE idx = #{idx}
+	</delete>
+</mapper>

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='common'>
+
+	<insert id="insertFileInfo">
+	/* common.insertFileInfo */
+		INSERT INTO kcgbd.t_cmmn_file_info (
+			stor_file_nm
+			,file_ext
+			,upload_path
+			,path
+			,org_file_nm
+			,file_size
+			,content_type
+		) VALUES (
+			#{stor_file_nm}
+			,#{file_ext}
+			,#{upload_path}
+			,#{path}
+			,#{org_file_nm}
+			,#{file_size}
+			,#{content_type}
+		)
+	</insert>
+	
+	<update id="deleteFileInfo" parameterType="cmmnMap">
+	/* common.deleteFileInfo */
+		UPDATE kcgbd.t_cmmn_file_info SET
+			del_yn = 'y'
+		WHERE 1=1
+			AND stor_file_nm = #{stor_file_nm}
+	</update>
+	
+	<select id="selectFileInfo" parameterType="string" resultType="cmmnMap">
+	/* common.selectFileInfo */
+		SELECT
+			stor_file_nm
+			,file_ext
+			,upload_path
+			,path
+			,org_file_nm
+		FROM kcgbd.t_cmmn_file_info
+		WHERE 1=1
+			AND stor_file_nm = #{stor_file_nm}
+			AND del_yn = 'N'
+	</select>
+
+	<select id="getAllCmmnCd" resultType="cmmnMap">
+	/* common.getComCodeList */
+		SELECT 
+			code_grp_id
+			,code_id
+			,code_grp_nm
+			,code_nm
+			,code_dc
+		FROM
+			kcgbd.t_cmmn_code
+	</select>
+	
+	<select id="getUserInfoFromIam" parameterType="string" resultType="userInfoVO">
+	/* common.getUserInfoFromIam */
+		SELECT
+			usr.userid AS user_id
+			,usr.name
+			,usr.dept
+			,usr.dept_mogahacd AS deptMogahacd
+			,usr.rdept_mogahacd AS rdeptMogahacd
+			,usr.fdeptnm
+			,usr.tdeptnm AS tdept_nm
+			,usr.ldeptnm
+			,usr.sdeptnm
+			,usr.jikgubcd AS jikgub_cd
+			,usr.jikgubnm AS jikgub_nm
+			,usr.positioncd
+			,usr.positionnm
+			,usr.statuscd AS status_cd
+			,(SELECT a.value FROM AO_IAM.VAOI_PPSS_USER_MAP_BD a WHERE a.name = usr.statuscd ) AS statusnm
+		FROM AO_IAM.VAOI_PPSS_USER_MAP_BD usr
+		WHERE 1=1
+			AND usr.userid = #{user_id}
+	</select>
+	
+	<select id="getStatisticCnt" parameterType="cmmnMap" resultType="cmmnMap">
+	/* common.getStatisticCnt */
+		SELECT
+			${col_nm} cnt
+		FROM kcgbd.t_statistic
+		WHERE 1=1
+			AND statistic_date = #{statistic_date}
+			AND user_id = #{user_id}
+		LIMIT 1
+	</select>
+	
+	<insert id="insertStatisticCnt" parameterType="cmmnMap">
+	/* common.insertStatisticCnt */
+		INSERT INTO kcgbd.t_statistic (
+			statistic_date
+			,${col_nm}
+			,user_id
+		) VALUES (
+			#{statistic_date}
+			,${col_nm_cnt}
+			,#{user_id}
+		)
+	</insert>
+	
+	<update id="updateStatisticCnt" parameterType="cmmnMap">
+	/* common.updateStatisticCnt */
+		UPDATE kcgbd.t_statistic SET
+			${col_nm} = ${col_nm_cnt}
+		WHERE 1=1
+			AND statistic_date = #{statistic_date}
+			AND user_id = #{user_id}
+	</update>
+	
+	
+	<select id="getUserAuthInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* common.getUserAuthInfo */
+ 		SELECT 
+			tu.user_id 
+			,tu.auth_cd 
+			,ta.auth_nm 
+			,ta.admin_yn 
+			,tu.iam_yn 
+			,tu.status_cd 
+			,tu."name" 
+			,tu.jikgub_cd
+			,tu.jikgub_nm
+			,tu.dept
+			,tu.tdept_nm 
+			,tu.email 
+			,tu.del_yn 
+		FROM kcgbd.t_user tu , kcgbd.t_auth ta 
+		WHERE tu.auth_cd  = ta.auth_cd 
+			AND tu.user_id = #{user_id}
+	</select>
+	
+
+
+	<select id="getKeywordCnt" parameterType="cmmnMap" resultType="cmmnMap">
+	/* common.getKeywordCnt */
+		SELECT
+			keyword_cnt
+		FROM
+			kcgbd.t_keyword_log
+		WHERE 1=1
+			AND keyword = #{keyword}
+			AND reg_date = #{reg_date}
+	</select>
+
+	<insert id="insertKeywordCnt" parameterType="cmmnMap">
+	/* common.insertKeywordCnt */
+		INSERT INTO kcgbd.t_keyword_log (
+			keyword
+			,keyword_cnt
+			,reg_date
+		) VALUES (
+			#{keyword}
+			,1
+			,#{reg_date}
+		)
+	</insert>
+
+	<update id="updateKeywordCnt" parameterType="cmmnMap">
+	/* common.updateKeywordCnt */
+		UPDATE kcgbd.t_keyword_log SET
+			keyword_cnt = ${keyword_cnt}
+		WHERE 1=1
+			AND keyword = #{keyword}
+			AND reg_date = #{reg_date}
+	</update>
+
+	
+	<update id="addReadCntBigdataTrend" parameterType="string">
+	/* common.addReadCntBigdataTrend */
+		UPDATE kcgbd.t_bigdata_trend
+		SET 
+			read_cnt = (coalesce(read_cnt,0) + 1)
+		WHERE idx = #{idx}
+	</update>
+	
+	<update id="addReadCntInquire" parameterType="string">
+	/* common.addReadCntInquire */
+		UPDATE kcgbd.t_inquire
+		SET 
+			read_cnt = (coalesce(read_cnt,0) + 1)
+		WHERE idx = #{idx}
+	</update>
+	
+	<update id="addReadCntLibrary" parameterType="string">
+	/* common.addReadCntLibrary */
+		UPDATE kcgbd.t_library
+		SET 
+			read_cnt = (coalesce(read_cnt,0) + 1)
+		WHERE idx = #{idx}
+	</update>
+	
+	<update id="addReadCntNews" parameterType="string">
+	/* common.addReadCntNews */
+		UPDATE kcgbd.t_news
+		SET 
+			read_cnt = (coalesce(read_cnt,0) + 1)
+		WHERE idx = #{idx}
+	</update>
+	
+	<update id="addReadCntAnalIdea" parameterType="string">
+	/* common.addReadCntAnalIdea */
+		UPDATE kcgbd.t_anal_idea
+		SET 
+			read_cnt = (coalesce(read_cnt,0) + 1)
+		WHERE idx = #{idx}
+	</update>
+	
+	<update id="addReadCntDataVisualization" parameterType="string">
+	/* common.addReadCntDataVisualization */
+		UPDATE kcgbd.t_data_visualization
+		SET 
+			read_cnt = (coalesce(read_cnt,0) + 1)
+		WHERE idx = #{idx}
+	</update>
+	
+	<update id="addReadCntUseExample" parameterType="string">
+	/* common.addReadCntUseExample */
+		UPDATE kcgbd.t_use_sample
+		SET 
+			read_cnt = (coalesce(read_cnt,0) + 1)
+		WHERE idx = #{idx}
+	</update>
+	
+	<select id="getDateListFromHive" parameterType="cmmnMap" resultType="cmmnMap">
+	/* common.getDateListFromHive */
+		SELECT
+			${hiveColumnNmList}
+		FROM 
+			${hiveDbNm}.${hiveTableNm}
+		${limit}
+	</select>
+	
+	
+	
+	<select id="getNotiList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* common.getNotiList */
+		SELECT
+			A.target_idx
+			,A.target_cat
+			,A.target_user_id
+			,A.reg_dt
+			,to_char(A.reg_dt, 'yyyy-mm-dd hh24:mi') reg_dt_char
+		FROM
+			kcgbd.t_req_noti A
+		WHERE 1=1
+			AND A.target_user_id = #{user_id}
+	</select>
+	
+	<insert id="insertReqNoti" parameterType="cmmnMap">
+	/* common.insertReqNoti */
+		INSERT INTO kcgbd.t_req_noti (
+			target_idx
+			,target_cat
+			,target_user_id
+			,reg_dt
+		) VALUES (
+			#{target_idx}
+			,#{target_cat}
+			,#{target_user_id}
+			,now()
+		)
+	</insert>
+	
+	<select id="getNotiCnt" parameterType="string" resultType="int">
+	/* common.getNotiCnt */
+		SELECT
+			COUNT(*)
+		FROM
+			kcgbd.t_req_noti
+		WHERE 1=1
+			AND target_user_id = #{user_id}
+	</select>
+	
+	<delete id="deleteNotiInfo" parameterType="string">
+	/* common.deleteNotiInfo */
+		DELETE FROM kcgbd.t_req_noti
+		WHERE 1=1
+			AND target_idx = #{target_idx}
+	</delete>
+	
+	<select id="getDownloadReqInfo" parameterType="string" resultType="cmmnMap">
+	/* common.getDownloadReqInfo */
+		SELECT
+			CONCAT(
+				B.table_korean_nm
+				,' (' 
+				,(SELECT count(*) FROM kcgbd.t_download_req_dtl WHERE download_req_idx = A.idx)
+				,'개 컬럼)'
+				) subject
+			,
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'APRVCD' AND code_id = B.req_sts) status
+		FROM
+			kcgbd.t_download_req A
+			,kcgbd.t_rule_meta_0002 B
+		WHERE 1=1
+			AND A.db_table_id = B.db_table_id
+			AND A.idx = #{target_idx}
+	</select>
+	
+	<select id="getAnalToolReqInfo" parameterType="string" resultType="cmmnMap">
+	/* common.getAnalToolReqInfo */
+		SELECT
+			A.sbjt subject
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'APRVCD' AND code_id = A.req_sts) status
+		FROM
+			kcgbd.t_anal_tool_req A
+		WHERE 1=1
+			AND A.idx = #{target_idx}
+	</select>
+	
+	<select id="getDataAnalReqInfo" parameterType="string" resultType="cmmnMap">
+	/* common.getDataAnalReqInfo */
+		SELECT
+			A.sbjt subject
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'APRVCD' AND code_id = A.req_sts) status
+		FROM
+			kcgbd.t_data_anal_req A
+		WHERE 1=1
+			AND A.idx = #{target_idx}
+	</select>
+	
+	<select id="getDataCollectReqInfo" parameterType="string" resultType="cmmnMap">
+	/* common.getDataAnalReqInfo */
+		SELECT
+			A.sbjt subject
+			,(SELECT code_nm FROM kcgbd.t_cmmn_code WHERE code_grp_id = 'APRVCD' AND code_id = A.req_sts) status
+		FROM
+			kcgbd.t_data_collect_req A
+		WHERE 1=1
+			AND A.idx = #{target_idx}
+	</select>
+
+	<select id="getSearchWordList" resultType="cmmnMap">
+		/* common.getSearchWordList */
+		SELECT 
+			B.keyword
+		FROM (
+			SELECT
+				A.keyword
+				,SUM(A.keyword_cnt) cnt
+			FROM
+				kcgbd.t_keyword_log A
+			WHERE 1=1
+				and A.reg_date >= to_char(current_timestamp + '-7 days', 'yyyy-mm-dd')
+			GROUP BY keyword
+			ORDER BY cnt desc
+			) B
+		LIMIT 5
+	</select>
+</mapper>

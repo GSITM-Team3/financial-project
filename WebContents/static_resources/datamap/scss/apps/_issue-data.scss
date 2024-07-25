@@ -1,0 +1,61 @@
+.issue-filter-area {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+
+  .issue-filter-btn-area {
+    border: 1px solid #999999;
+    max-width: 100%;
+    .issue-filter-btn {
+      margin-left: 0px;
+      margin-right: 0px;
+      float: left;
+      border: none;
+      border-right: 1px solid #999999;
+      color: #333333;
+
+      &.on {
+        color: white;
+        background-color: #2E79C6;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+
+  .issue-filter-dropdown-area {
+    max-width: 100%;
+    flex-grow: 1;
+    text-align: right;
+    .issue-filter-dropdown {
+      height: 34px;
+    }
+  }
+
+  @media screen and (max-width: 576px) {
+    .issue-filter-btn-area {
+      flex-grow: 1;
+      text-align: right;
+      margin-bottom: 5px;
+
+      .issue-filter-btn {
+        width: 33.3%;
+      }
+    }
+
+    .issue-filter-dropdown-area {
+      width: 100%;
+    }
+  }
+}
+
+.recommend-banner-img {
+  height: 450px;
+
+  @media (max-width: 576px) {
+    max-width: 100%;
+    height: auto;
+  }
+}

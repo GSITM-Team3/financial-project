@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="callSettersOnNulls" value="true"/>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	<typeAliases>
+		<typeAlias alias="cmmnMap" type="common.utils.common.CmmnMap"/>
+		<typeAlias alias="userInfoVO" type="kcg.login.vo.UserInfoVO"/>
+		<typeAlias alias="menuVO" type="kcg.login.vo.MenuVO"/>
+		<typeAlias alias="TbCodemstEntity" type="kcg.login.vo.TbCodemstEntity"/>
+	</typeAliases>
+	<plugins>
+		<plugin interceptor="common.utils.mybatis_paginator.OffsetLimitInterceptor">
+			<property name="dialectClass" value="common.utils.mybatis_paginator.dialect.PostgreSQLDialect"/>
+		</plugin>
+	</plugins>
+	<mappers>
+	    <mapper resource="kcg/team3/sql/ProdThSQL.xml"/>
+	    <mapper resource="kcg/team3/sql/CommunityThSQL.xml"/>
+	    <mapper resource="kcg/team3/sql/ShareThSQL.xml"/>
+	    <mapper resource="kcg/team3/sql/PromotionThSQL.xml"/>
+	    <mapper resource="kcg/team3/sql/ActiveThSQL.xml"/>
+	    <mapper resource="kcg/team3/sql/CustThSQL.xml"/>
+	</mappers>
+</configuration>

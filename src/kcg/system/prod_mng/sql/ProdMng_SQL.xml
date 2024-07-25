@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='system.prod_mng'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.prod_mng.getlist */
+		select prod_cd
+		     , prod_nm
+		     , prod_ty_cd
+		     , (select code_nm from kcgbd.tb_codemst where code_cl = '121' and code_no = prod_ty_cd ) prod_ty_cd_nm
+		     , sbstg_ty_cd
+		     , (select code_nm from kcgbd.tb_codemst where code_cl = '100' and code_no = sbstg_ty_cd ) sbstg_ty_cd_nm
+		     , ntsl_amt_min
+		     , ntsl_amt_max
+		     , prod_air_min
+		     , prod_air_max
+		     , pay_ty_cd
+		     , (select code_nm from kcgbd.tb_codemst where code_cl = '110' and code_no = pay_ty_cd ) pay_ty_cd_nm
+		     , to_char(to_date(prod_air_bgng_ymd, 'yyyymmdd'), 'yyyy-mm-dd') prod_air_bgng_ymd
+		     , to_char(to_date(prod_air_end_ymd, 'yyyymmdd'), 'yyyy-mm-dd') prod_air_end_ymd
+		     , int_tax_ty_cd
+		     , (select code_nm from kcgbd.tb_codemst where code_cl = '131' and code_no = int_tax_ty_cd ) int_tax_ty_cd_nm
+		     , curr_stcd
+		     , to_char(to_date(ntsl_bgng_ymd, 'yyyymmdd'), 'yyyy-mm-dd') ntsl_bgng_ymd
+		     , to_char(to_date(ntsl_end_ymd, 'yyyymmdd'), 'yyyy-mm-dd') ntsl_end_ymd
+		     , wrter_nm
+		     , wrt_dt
+		  from kcgbd.tb_prodmst
+		 where 1=1
+		<if test='prod_cd != null and prod_cd != ""'>
+		   and prod_cd = #{prod_cd}
+		</if>
+		<if test='prod_nm != null and prod_nm != ""'>
+		   and prod_nm like concat('%',#{prod_nm},'%')
+		</if>
+		<if test='sbstg_ty_cd != null and sbstg_ty_cd != ""'>
+		   and sbstg_ty_cd = #{sbstg_ty_cd}
+		</if>
+		<if test='pay_ty_cd != null and pay_ty_cd != ""'>
+		   and pay_ty_cd = #{pay_ty_cd}
+		</if>
+		<if test='from_date != null and from_date != ""'>
+		   and #{from_date} between ntsl_bgng_ymd and ntsl_bgng_ymd
+		</if>
+		<if test='prod_ty_cd != null and prod_ty_cd != ""'>
+		   and prod_ty_cd = #{prod_ty_cd}
+		</if>
+	</select>
+	
+	<select id="getHist" parameterType="cmmnMap" resultType="cmmnMap">
+	/* system.prod_mng.getHist */
+		select distinct
+		       prod_cd
+		     , prod_air_min
+		     , prod_air_max
+		     , to_char(to_date(prod_air_bgng_ymd, 'yyyymmdd'), 'yyyy-mm-dd') prod_air_bgng_ymd
+		     , to_char(to_date(prod_air_end_ymd, 'yyyymmdd'), 'yyyy-mm-dd') prod_air_end_ymd
+		     , curr_stcd
+		     , wrter_nm
+		     , wrt_dt
+		  from kcgbd.tb_prodintrhist
+		 where prod_cd = #{prod_cd}
+		order by wrt_dt desc, prod_air_min desc
+	</select>
+	
+	<insert id="insertInfo" parameterType="cmmnMap">
+	/* system.prod_mng.insertinfo */
+		 insert 
+		   into kcgbd.tb_prodmst (
+		        prod_cd
+		      , prod_nm
+		      , prod_ty_cd
+		      , sbstg_ty_cd
+		      , ntsl_amt_min
+		      , ntsl_amt_max
+		      , prod_air_min
+		      , prod_air_max
+		      , pay_ty_cd
+		      , prod_air_bgng_ymd
+		      , prod_air_end_ymd
+		      , int_tax_ty_cd
+		      , curr_stcd
+		      , ntsl_bgng_ymd
+		      , ntsl_end_ymd
+		      , wrter_nm
+		      , wrt_dt
+		      )
+		values (
+			    #{prod_cd}
+		      , #{prod_nm}
+		      , #{prod_ty_cd}
+		      , #{sbstg_ty_cd}
+		      , cast(#{ntsl_amt_min} as numeric(15))
+		      , cast(#{ntsl_amt_max} as numeric(15))
+		      , cast(#{prod_air_min} as numeric(3,2))
+		      , cast(#{prod_air_max} as numeric(5,2))
+		      , #{pay_ty_cd}
+		      , replace(#{prod_air_bgng_ymd}, '-', '')
+		      , replace(#{prod_air_end_ymd}, '-', '')
+		      , #{int_tax_ty_cd}
+		      , #{curr_stcd}
+		      , replace(#{ntsl_bgng_ymd}, '-', '')
+		      , replace(#{ntsl_end_ymd}, '-', '')
+		      , #{user_id}
+		      , now()
+		      )
+	</insert>
+	
+	<insert id="insertHist" parameterType="cmmnMap">
+	/* system.prod_mng.insertHist */
+		 insert 
+		   into kcgbd.tb_prodintrhist (
+		        prod_cd
+		      , prod_air_min
+		      , prod_air_max
+		      , prod_air_bgng_ymd
+		      , prod_air_end_ymd
+		      , curr_stcd
+		      , wrter_nm
+		      , wrt_dt
+		      )
+		values (
+		      	#{prod_cd}
+		      , cast(#{prod_air_min} as numeric(3,2))
+		      , cast(#{prod_air_max} as numeric(5,2))
+		      , replace(#{prod_air_bgng_ymd}, '-', '')
+		      , replace(#{prod_air_end_ymd}, '-', '')
+		      , #{curr_stcd}
+		      , #{user_id}
+		      , now()
+		      )
+	</insert>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* system.prod_mng.updateinfo */
+		update kcgbd.tb_prodmst
+		   set prod_nm           = #{prod_nm}
+		     , prod_ty_cd        = #{prod_ty_cd}
+		     , sbstg_ty_cd       = #{sbstg_ty_cd}
+		     , ntsl_amt_min      = cast(#{ntsl_amt_min} as numeric(15))
+		     , ntsl_amt_max      = cast(#{ntsl_amt_max} as numeric(15))
+		     , prod_air_min      = cast(#{prod_air_min} as numeric(3,2))
+		     , prod_air_max      = cast(#{prod_air_max} as numeric(5,2))
+		     , pay_ty_cd         = #{pay_ty_cd}
+		     , prod_air_bgng_ymd = replace(#{prod_air_bgng_ymd}, '-', '')
+		     , prod_air_end_ymd  = replace(#{prod_air_end_ymd}, '-', '')
+		     , int_tax_ty_cd     = #{int_tax_ty_cd}
+		     , curr_stcd         = #{curr_stcd}
+		     , ntsl_bgng_ymd     = replace(#{ntsl_bgng_ymd}, '-', '')
+		     , ntsl_end_ymd      = replace(#{ntsl_end_ymd}, '-', '')
+		 where prod_cd = #{prod_cd}
+	</update>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	/* system.prod_mng.deleteinfo */
+		delete 
+		  from kcgbd.tb_prodmst
+		 where prod_cd = #{prod_cd}
+	</delete>
+</mapper>

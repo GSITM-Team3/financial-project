@@ -1,0 +1,44 @@
+/**
+ *
+ * Apply Here your Custom CSS
+ *
+*/
+
+.sys_label_01 {
+	width: 200px;
+	float: left;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.sys_col_01 {
+	width: 130px;
+	float: left;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.sys_col_02 {
+	width: 250px;
+	float: left;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.sys_col_03 {
+	width: 450px;
+	float: left;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.sys_col_05 {
+	width: 700px;
+	float: left;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.sys_span_01 {
+	float: left;
+}
+
+body {
+	
+}

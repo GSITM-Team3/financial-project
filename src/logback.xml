@@ -1,0 +1,22 @@
+<configuration>
+	<if condition='"${action.mode}".equals("prod")'>
+		<then>
+			<property name="LOGBACK_CONFIG_FILE" value="logback_prod.xml" />
+		</then>
+<!-- 		<else> -->
+<!-- 			<property name="LOGBACK_CONFIG_FILE" value="logback-local.xml" /> -->
+<!-- 		</else> -->
+	</if>
+	<if condition='"${action.mode}".equals("local")'>
+		<then>
+			<property name="LOGBACK_CONFIG_FILE" value="logback_local.xml" />
+		</then>
+	</if>
+	<if condition='"${action.mode}".equals("dev")'>
+		<then>
+			<property name="LOGBACK_CONFIG_FILE" value="logback_dev.xml" />
+		</then>
+	</if>
+	<include resource="${LOGBACK_CONFIG_FILE}"/>
+<typeAliases></typeAliases>
+</configuration>

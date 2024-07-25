@@ -1,0 +1,62 @@
+.standard-data-table {
+  margin-top: 2rem;
+  height: 600px;
+}
+
+.desc-wrap {
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  vertical-align: middle;
+  background-color: #fafafa;
+}
+
+.data-detail-wrap {
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  line-height: 30px;
+  vertical-align: middle;
+
+  .title {
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  .option-btns {
+    display: inline-block;
+    float: right;
+
+    > .button {
+      line-height: initial;
+      height: initial;
+      padding: 4px 8px;
+      font-weight: normal;
+    }
+  }
+}
+
+.table.fileDataDetail {
+  width: 100%;
+  border: 1px solid #999;
+  border-collapse: collapse;
+
+  th, td {
+    border: 1px solid #999;
+    padding: 10px;
+    padding-left: 5px;
+  }
+}
+
+.dataset-openapi-info {
+  display: flex;
+  justify-content: space-between;
+  .dataset-list-btn {
+    margin-left: 0px;
+    margin-right: 0px;
+    float: left;
+    border: none;
+    border-right: 1px solid #999999;
+    color: #333333;
+  }
+}

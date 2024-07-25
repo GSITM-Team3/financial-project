@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace='etc.mng.external.system.url'>
+
+	<select id="getList" parameterType="cmmnMap" resultType="cmmnMap">
+	/* etc.mng.external.system.url.getList */
+		SELECT 
+			A.ext_url
+			,A.sys_nm
+			,to_char(A.reg_dt,'yyyy-mm-dd  hh24:mi:ss') reg_dt
+			,to_char(A.updt_dt,'yyyy-mm-dd  hh24:mi:ss') updt_dt
+			,A.reg_user_id
+			,A.updt_user_id
+			,USR.name reg_user_name
+		FROM kcgbd.t_ext_sys_url_mng A
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = A.reg_user_id
+	</select>
+	
+	<select id="getInfo" parameterType="cmmnMap" resultType="cmmnMap">
+	/* etc.mng.external.system.url.getInfo */
+		SELECT 
+			A.ext_url
+			,A.sys_nm
+			,to_char(A.reg_dt,'yyyy-mm-dd  hh24:mi:ss') reg_dt
+			,to_char(A.updt_dt,'yyyy-mm-dd  hh24:mi:ss') updt_dt
+			,A.reg_user_id
+			,A.updt_user_id
+			,USR.name reg_user_name
+		FROM kcgbd.t_ext_sys_url_mng A
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = A.reg_user_id
+			AND A.ext_url = #{ext_url}
+	</select>
+	
+	<update id="updateInfo" parameterType="cmmnMap">
+	/* etc.mng.external.system.url.updateInfo */
+		UPDATE kcgbd.t_ext_sys_url_mng
+		SET 
+			sys_nm = #{sys_nm}
+			,updt_dt = now()
+			,updt_user_id = #{user_id}
+		WHERE ext_url = #{ext_url}
+	</update>
+	
+	<insert id="insertInfo" parameterType="cmmnMap">
+	/* etc.mng.external.system.url.insertInfo */
+		INSERT INTO kcgbd.t_ext_sys_url_mng(
+			ext_url
+			,sys_nm
+			,reg_dt
+			,updt_dt
+			,reg_user_id
+			,updt_user_id
+		)VALUES(
+			#{ext_url}
+			,#{sys_nm}
+			,now()
+			,now()
+			,#{user_id}
+			,#{user_id}
+		)
+	</insert>
+	
+	<delete id="deleteInfo" parameterType="cmmnMap">
+	/* etc.mng.external.system.url.deleteInfo */
+		DELETE FROM kcgbd.t_ext_sys_url_mng
+		WHERE ext_url = #{ext_url}
+	</delete>
+	
+	<select id="chkDpl" parameterType="cmmnMap" resultType="cmmnMap">
+	/* etc.mng.external.system.url.chkDpl */
+		SELECT 
+			count(ext_url) cnt
+		FROM kcgbd.t_ext_sys_url_mng A
+			,kcgbd.t_user USR
+		WHERE 1=1
+			AND USR.user_id = A.reg_user_id
+			AND A.ext_url = #{ext_url}
+	</select>
+	
+	
+</mapper>
